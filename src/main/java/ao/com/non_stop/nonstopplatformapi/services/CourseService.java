@@ -49,7 +49,7 @@ public class CourseService {
         return this.courseRepository.findByName(name).orElseThrow(()-> new Exception("This Course Doesn't Exists !"));
     }
 
-    public List<Course> filterCoursesByCategory(CourseCategory category) throws Exception{
+    public List<Course> filterCoursesByCategory(CourseCategory category){
         return this.courseRepository.findByCategory(category);
     }
 }
