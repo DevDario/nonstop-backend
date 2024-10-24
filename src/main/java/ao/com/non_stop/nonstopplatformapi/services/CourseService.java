@@ -2,12 +2,14 @@ package ao.com.non_stop.nonstopplatformapi.services;
 
 import ao.com.non_stop.nonstopplatformapi.dtos.CourseDTO;
 import ao.com.non_stop.nonstopplatformapi.entities.Course;
+import ao.com.non_stop.nonstopplatformapi.enums.CourseCategory;
 import ao.com.non_stop.nonstopplatformapi.exceptions.CourseNotFoundException;
 import ao.com.non_stop.nonstopplatformapi.repositories.CourseRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -24,7 +26,7 @@ public class CourseService {
                 .name(courseDTO.name())
                 .description(courseDTO.description())
                 .releaseDate(courseDTO.releaseDate())
-                .categories(courseDTO.categories())
+                .category(courseDTO.category())
                 .image(courseDTO.image())
                 .build();
 
@@ -46,5 +48,9 @@ public class CourseService {
 
     public Course getCourseByName(String name) throws Exception{
         return this.courseRepository.findByName(name).orElseThrow(()-> new Exception("This Course Doesn't Exists !"));
+    }
+
+    public List<Course> filterCoursesByCategory(CourseCategory category) throws Exception{
+        return this.courseRepository.findByCategory(category);
     }
 }
