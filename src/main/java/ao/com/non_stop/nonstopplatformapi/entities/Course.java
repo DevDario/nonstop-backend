@@ -1,9 +1,11 @@
 package ao.com.non_stop.nonstopplatformapi.entities;
 
+import ao.com.non_stop.nonstopplatformapi.enums.CourseCategory;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.Date;
+import java.util.Timer;
 
 @Data
 @AllArgsConstructor
@@ -27,6 +29,10 @@ public class Course {
 
     @Column(nullable = false)
     private Date releaseDate;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private CourseCategory courseCategory;
 
     @Column
     private String image;
