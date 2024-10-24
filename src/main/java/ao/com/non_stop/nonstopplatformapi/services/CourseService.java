@@ -26,7 +26,7 @@ public class CourseService {
         Course course = Course.builder()
                 .name(courseDTO.name())
                 .description(courseDTO.description())
-                .releaseDate(new Date(courseDTO.releaseDate()))
+                .releaseDate(courseDTO.releaseDate())
                 .image(courseDTO.image())
                 .build();
 
