@@ -7,10 +7,7 @@ import ao.com.non_stop.nonstopplatformapi.services.CourseService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Base64;
 
@@ -31,5 +28,11 @@ public class CourseController {
         CourseDTO courseDTO = new CourseDTO(course.getName(), course.getDescription(), course.getReleaseDate(),base64Image);
 
         return ResponseEntity.ok(courseDTO);
+    }
+
+    @PostMapping("/new")
+    public ResponseEntity<Course> createCourse(@RequestBody CourseDTO body){
+        Course newCourse = this.courseService.createCourse(body);
+        return ResponseEntity.ok(newCourse);
     }
 }
