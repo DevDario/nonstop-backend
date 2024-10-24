@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Timer;
 
 @Data
@@ -32,7 +33,7 @@ public class Course {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private CourseCategory category;
+    private List<CourseCategory> categories;
 
     @Column
     private String image;
