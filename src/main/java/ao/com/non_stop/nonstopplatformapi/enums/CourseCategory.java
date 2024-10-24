@@ -1,7 +1,7 @@
 package ao.com.non_stop.nonstopplatformapi.enums;
 
 public enum CourseCategory {
-    PROGRAMMING("MICROSSERVICE"),
+    MICROSSERVICE("MICROSSERVICE"),
     BACKEND("BACKEND"),
     DESIGN("DESIGN"),
     FRONTEND("FRONTEND"),
