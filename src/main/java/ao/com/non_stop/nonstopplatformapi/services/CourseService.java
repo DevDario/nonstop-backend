@@ -5,12 +5,9 @@ import ao.com.non_stop.nonstopplatformapi.entities.Course;
 import ao.com.non_stop.nonstopplatformapi.exceptions.CourseNotFoundException;
 import ao.com.non_stop.nonstopplatformapi.repositories.CourseRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 
-import java.util.Base64;
-import java.util.Date;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -33,5 +30,12 @@ public class CourseService {
         courseRepository.save(course);
 
         return course;
+    }
+
+    public List<Course> deleteCourse(Long courseId) throws CourseNotFoundException{
+        Course course = courseRepository.findById(courseId).orElseThrow(()-> new CourseNotFoundException(courseId));
+        courseRepository.delete(course);
+
+        return courseRepository.findAll();
     }
 }
