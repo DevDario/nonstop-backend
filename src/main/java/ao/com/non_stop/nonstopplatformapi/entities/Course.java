@@ -12,6 +12,7 @@ import java.util.Date;
 @Setter
 @Table
 @Entity
+@Builder
 public class Course {
 
     @Id
