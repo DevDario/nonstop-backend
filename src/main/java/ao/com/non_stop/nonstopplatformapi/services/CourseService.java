@@ -43,4 +43,8 @@ public class CourseService {
     public List<Course> getAllCourses(){
         return this.courseRepository.findAll();
     }
+
+    public Course getCourseByName(String name) throws Exception{
+        return this.courseRepository.findByName(name).orElseThrow(()-> new Exception("This Course Doesn't Exists !"));
+    }
 }
