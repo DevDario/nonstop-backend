@@ -1,6 +1,7 @@
 package ao.com.non_stop.nonstopplatformapi.entities;
 
 import ao.com.non_stop.nonstopplatformapi.enums.CourseCategory;
+import ao.com.non_stop.nonstopplatformapi.enums.CourseLevel;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -34,6 +35,10 @@ public class Course {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private CourseCategory category;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private CourseLevel level;
 
     @Column
     private String image;
