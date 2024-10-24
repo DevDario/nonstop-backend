@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.Base64;
+import java.util.Date;
 
 @Service
 @AllArgsConstructor
@@ -17,7 +18,20 @@ public class CourseService {
 
     private final CourseRepository courseRepository;
 
-    public Course getCourseById(@PathVariable Long courseId) throws CourseNotFoundException{
+    public Course getCourseById(Long courseId) throws CourseNotFoundException{
         return courseRepository.findById(courseId).orElseThrow(() -> new CourseNotFoundException(courseId));
+    }
+
+    public Course createCourse(CourseDTO courseDTO){
+        Course course = Course.builder()
+                .name(courseDTO.name())
+                .description(courseDTO.description())
+                .releaseDate(new Date(courseDTO.releaseDate()))
+                .image(courseDTO.image())
+                .build();
+
+        courseRepository.save(course);
+
+        return course;
     }
 }
