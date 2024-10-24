@@ -24,6 +24,7 @@ public class CourseService {
                 .name(courseDTO.name())
                 .description(courseDTO.description())
                 .releaseDate(courseDTO.releaseDate())
+                .categories(courseDTO.categories())
                 .image(courseDTO.image())
                 .build();
 
