@@ -33,7 +33,7 @@ public class Course {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private List<CourseCategory> categories;
+    private CourseCategory category;
 
     @Column
     private String image;
