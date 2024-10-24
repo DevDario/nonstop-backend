@@ -32,7 +32,7 @@ public class Course {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private CourseCategory courseCategory;
+    private CourseCategory category;
 
     @Column
     private String image;
