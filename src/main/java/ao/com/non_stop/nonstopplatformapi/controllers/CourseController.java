@@ -43,4 +43,10 @@ public class CourseController {
 
         return ResponseEntity.ok(courses);
     }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<Course>> getAllCourses(){
+        var courses = this.courseService.getAllCourses();
+        return ResponseEntity.ok(courses);
+    }
 }
