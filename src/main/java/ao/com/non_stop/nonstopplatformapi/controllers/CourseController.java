@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Base64;
+import java.util.List;
 
 @Controller
 @RestController
@@ -34,5 +35,12 @@ public class CourseController {
     public ResponseEntity<Course> createCourse(@RequestBody CourseDTO body){
         Course newCourse = this.courseService.createCourse(body);
         return ResponseEntity.ok(newCourse);
+    }
+
+    @DeleteMapping("/delete/{courseId}")
+    public ResponseEntity<List<Course>> deleteCourse(@PathVariable Long courseId) throws CourseNotFoundException{
+        List<Course> courses = this.courseService.deleteCourse(courseId);
+
+        return ResponseEntity.ok(courses);
     }
 }
