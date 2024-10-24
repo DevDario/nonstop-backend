@@ -28,7 +28,7 @@ public class CourseController {
 
         String base64Image = course.getImage() != null ? Base64.getEncoder().encodeToString(course.getImage().getBytes()) : null;
 
-        CourseDTO courseDTO = new CourseDTO(course.getName(), course.getDescription(), base64Image);
+        CourseDTO courseDTO = new CourseDTO(course.getName(), course.getDescription(), course.getReleaseDate(),base64Image);
 
         return ResponseEntity.ok(courseDTO);
     }
