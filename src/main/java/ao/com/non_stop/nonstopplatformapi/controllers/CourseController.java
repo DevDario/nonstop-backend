@@ -5,6 +5,7 @@ import ao.com.non_stop.nonstopplatformapi.entities.Course;
 import ao.com.non_stop.nonstopplatformapi.exceptions.CourseNotFoundException;
 import ao.com.non_stop.nonstopplatformapi.services.CourseService;
 import lombok.AllArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +21,7 @@ public class CourseController {
 
     private final CourseService courseService;
 
-    @GetMapping("/{courseId}")
+    @GetMapping("/search/id/{courseId}")
     public ResponseEntity<CourseDTO> getCourse(@PathVariable Long courseId) throws CourseNotFoundException {
         Course course = courseService.getCourseById(courseId);
 
@@ -29,6 +30,14 @@ public class CourseController {
         CourseDTO courseDTO = new CourseDTO(course.getName(), course.getDescription(), course.getReleaseDate(),course.getCategories(),base64Image);
 
         return ResponseEntity.ok(courseDTO);
+    }
+
+    @GetMapping("/search/name/{name}")
+    public ResponseEntity<Course> getCourseByName(@PathVariable String name) throws Exception{
+
+        var course = this.courseService.getCourseByName(name);
+
+        return ResponseEntity.ok(course);
     }
 
     @PostMapping("/new")
