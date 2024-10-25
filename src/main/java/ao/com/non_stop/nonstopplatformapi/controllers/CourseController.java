@@ -6,6 +6,7 @@ import ao.com.non_stop.nonstopplatformapi.enums.CourseCategory;
 import ao.com.non_stop.nonstopplatformapi.exceptions.CourseNotFoundException;
 import ao.com.non_stop.nonstopplatformapi.services.CourseService;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -61,8 +62,8 @@ public class CourseController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<Course>> getAllCourses(){
-        var courses = this.courseService.getAllCourses();
-        return ResponseEntity.ok(courses);
+    public ResponseEntity<List<CourseDTO>> getAllCourses(@RequestParam int page, @RequestParam int size){
+        List<CourseDTO> allCourses = this.courseService.getAllCourses(page,size);
+        return ResponseEntity.ok(allCourses);
     }
 }
