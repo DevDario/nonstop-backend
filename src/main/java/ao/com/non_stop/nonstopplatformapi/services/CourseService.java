@@ -39,7 +39,7 @@ public class CourseService {
         Course course = courseRepository.findById(courseId).orElseThrow(()-> new CourseNotFoundException(courseId));
         courseRepository.delete(course);
 
-        return courseRepository.findAll();
+        return this.getAllCourses();
     }
 
     public List<Course> getAllCourses(){
