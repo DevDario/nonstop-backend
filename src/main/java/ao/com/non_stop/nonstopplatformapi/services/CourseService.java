@@ -6,6 +6,9 @@ import ao.com.non_stop.nonstopplatformapi.enums.CourseCategory;
 import ao.com.non_stop.nonstopplatformapi.exceptions.CourseNotFoundException;
 import ao.com.non_stop.nonstopplatformapi.repositories.CourseRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -39,11 +42,13 @@ public class CourseService {
         Course course = courseRepository.findById(courseId).orElseThrow(()-> new CourseNotFoundException(courseId));
         courseRepository.delete(course);
 
-        return this.getAllCourses();
+        return this.courseRepository.findAll();
     }
 
-    public List<Course> getAllCourses(){
-        return this.courseRepository.findAll();
+    public List<CourseDTO> getAllCourses(int page,int size){
+        Pageable pageable = PageRequest.of(page,size);
+        Page<Course> coursePage = this.courseRepository.findAll(pageable);
+        return coursePage.map(course-> new CourseDTO(course.getName(), course.getDescription(), course.getReleaseDate(),course.getCategory(),course.getLevel(),course.getImage())).stream().toList();
     }
 
     public Course getCourseByName(String name) throws Exception{
