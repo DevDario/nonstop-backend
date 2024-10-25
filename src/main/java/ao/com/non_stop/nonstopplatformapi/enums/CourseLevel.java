@@ -1,7 +1,7 @@
 package ao.com.non_stop.nonstopplatformapi.enums;
 
 public enum CourseLevel {
-    BEGGINER("BEGGINER"),
+    BEGINNER("BEGINNER"),
     INTERMEDIATE("INTERMEDIATE"),
     MEDIUM("MEDIUM"),
     ADVANCED("ADVANCED");
