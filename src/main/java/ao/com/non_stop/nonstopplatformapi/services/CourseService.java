@@ -12,7 +12,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.List;
 
 @Service
@@ -79,5 +78,20 @@ public class CourseService {
                         course.getImage()))
                 .stream()
                 .toList();
+    }
+
+    public Course updateCourseDetails(CourseDTO courseDetails, Long courseId)throws CourseNotFoundException{
+        Course course = this.courseRepository.findById(courseId).orElseThrow(()-> new CourseNotFoundException(courseId));
+
+        course.setName(courseDetails.name());
+        course.setDescription(courseDetails.description());
+        course.setCategory(courseDetails.category());
+        course.setLevel(courseDetails.level());
+        course.setReleaseDate(courseDetails.releaseDate());
+        course.setImage(courseDetails.image());
+
+        this.courseRepository.save(course);
+
+        return course;
     }
 }

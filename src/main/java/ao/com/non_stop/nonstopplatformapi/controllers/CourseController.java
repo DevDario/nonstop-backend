@@ -70,4 +70,11 @@ public class CourseController {
         List<CourseDTO> allCourses = this.courseService.getAllCourses(page,size);
         return ResponseEntity.ok(allCourses);
     }
+
+    @PutMapping("/update/{courseId}")
+    public ResponseEntity<Course> updateCourseDetails(@RequestBody CourseDTO body, @PathVariable Long courseId) throws CourseNotFoundException{
+        Course updatedCourse = this.courseService.updateCourseDetails(body,courseId);
+
+        return ResponseEntity.ok(updatedCourse);
+    }
 }
