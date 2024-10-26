@@ -3,6 +3,7 @@ package ao.com.non_stop.nonstopplatformapi.controllers;
 import ao.com.non_stop.nonstopplatformapi.dtos.CourseDTO;
 import ao.com.non_stop.nonstopplatformapi.entities.Course;
 import ao.com.non_stop.nonstopplatformapi.enums.CourseCategory;
+import ao.com.non_stop.nonstopplatformapi.enums.CourseLevel;
 import ao.com.non_stop.nonstopplatformapi.exceptions.CourseNotFoundException;
 import ao.com.non_stop.nonstopplatformapi.services.CourseService;
 import lombok.AllArgsConstructor;
@@ -40,10 +41,14 @@ public class CourseController {
         return ResponseEntity.ok(course);
     }
 
-    @GetMapping("/search/filter/")
-    public ResponseEntity<List<Course>> filterCoursesByCategory(@RequestParam(value = "category", defaultValue = "") CourseCategory category) throws Exception{
-        var courses = this.courseService.filterCoursesByCategory(category);
-
+    @GetMapping("/search/filter")
+    public ResponseEntity<List<CourseDTO>> filterCourses(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "3") int size,
+            @RequestParam(required = false) CourseCategory category,
+            @RequestParam(required = false) CourseLevel level
+    ){
+        List<CourseDTO> courses = this.courseService.getFilteredCourses(page,size,category,level);
         return ResponseEntity.ok(courses);
     }
 
@@ -61,7 +66,7 @@ public class CourseController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<CourseDTO>> getAllCourses(@RequestParam int page, @RequestParam int size){
+    public ResponseEntity<List<CourseDTO>> getAllCourses(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int size){
         List<CourseDTO> allCourses = this.courseService.getAllCourses(page,size);
         return ResponseEntity.ok(allCourses);
     }
