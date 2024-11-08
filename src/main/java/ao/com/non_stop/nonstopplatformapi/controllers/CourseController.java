@@ -53,16 +53,13 @@ public class CourseController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<Course> createCourse(@RequestBody CourseDTO body){
-        Course newCourse = this.courseService.createCourse(body);
-        return ResponseEntity.ok(newCourse);
+    public ResponseEntity<String> createCourse(@RequestBody CourseDTO body){
+        return this.courseService.createCourse(body);
     }
 
     @DeleteMapping("/{courseId}")
-    public ResponseEntity<List<Course>> deleteCourse(@PathVariable Long courseId) throws CourseNotFoundException{
-        List<Course> courses = this.courseService.deleteCourse(courseId);
-
-        return ResponseEntity.ok(courses);
+    public ResponseEntity<String> deleteCourse(@PathVariable Long courseId) throws CourseNotFoundException{
+        return this.courseService.deleteCourse(courseId);
     }
 
     @GetMapping("/all")
@@ -72,9 +69,7 @@ public class CourseController {
     }
 
     @PutMapping("/{courseId}")
-    public ResponseEntity<Course> updateCourseDetails(@RequestBody CourseDTO body, @PathVariable Long courseId) throws CourseNotFoundException{
-        Course updatedCourse = this.courseService.updateCourseDetails(body,courseId);
-
-        return ResponseEntity.ok(updatedCourse);
+    public ResponseEntity<String> updateCourseDetails(@RequestBody CourseDTO body, @PathVariable Long courseId) throws CourseNotFoundException{
+        return this.courseService.updateCourseDetails(body,courseId);
     }
 }
