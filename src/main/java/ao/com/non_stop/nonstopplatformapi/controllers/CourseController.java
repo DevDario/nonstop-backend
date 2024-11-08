@@ -16,13 +16,13 @@ import java.util.List;
 
 @Controller
 @RestController
-@RequestMapping("/api/courses")
+@RequestMapping("/api/v1/course")
 @AllArgsConstructor
 public class CourseController {
 
     private final CourseService courseService;
 
-    @GetMapping("/search/id/{courseId}")
+    @GetMapping("/{courseId}")
     public ResponseEntity<CourseDTO> getCourse(@PathVariable Long courseId) throws CourseNotFoundException {
         Course course = courseService.getCourseById(courseId);
 
@@ -33,7 +33,7 @@ public class CourseController {
         return ResponseEntity.ok(courseDTO);
     }
 
-    @GetMapping("/search/name/{name}")
+    @GetMapping("/name/{name}")
     public ResponseEntity<Course> getCourseByName(@PathVariable String name) throws Exception{
 
         var course = this.courseService.getCourseByName(name);
@@ -41,7 +41,7 @@ public class CourseController {
         return ResponseEntity.ok(course);
     }
 
-    @GetMapping("/search/filter")
+    @GetMapping("/filter/")
     public ResponseEntity<List<CourseDTO>> filterCourses(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "3") int size,
@@ -52,13 +52,13 @@ public class CourseController {
         return ResponseEntity.ok(courses);
     }
 
-    @PostMapping("/new")
+    @PostMapping("/")
     public ResponseEntity<Course> createCourse(@RequestBody CourseDTO body){
         Course newCourse = this.courseService.createCourse(body);
         return ResponseEntity.ok(newCourse);
     }
 
-    @DeleteMapping("/delete/{courseId}")
+    @DeleteMapping("/{courseId}")
     public ResponseEntity<List<Course>> deleteCourse(@PathVariable Long courseId) throws CourseNotFoundException{
         List<Course> courses = this.courseService.deleteCourse(courseId);
 
@@ -71,7 +71,7 @@ public class CourseController {
         return ResponseEntity.ok(allCourses);
     }
 
-    @PutMapping("/update/{courseId}")
+    @PutMapping("/{courseId}")
     public ResponseEntity<Course> updateCourseDetails(@RequestBody CourseDTO body, @PathVariable Long courseId) throws CourseNotFoundException{
         Course updatedCourse = this.courseService.updateCourseDetails(body,courseId);
 
