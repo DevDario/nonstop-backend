@@ -10,6 +10,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,7 +26,7 @@ public class CourseService {
         return courseRepository.findById(courseId).orElseThrow(() -> new CourseNotFoundException("We couldn't find a course with the ID of " + courseId));
     }
 
-    public Course createCourse(CourseDTO courseDTO){
+    public ResponseEntity<String> createCourse(CourseDTO courseDTO){
         Course course = Course.builder()
                 .name(courseDTO.name())
                 .description(courseDTO.description())
@@ -36,24 +38,32 @@ public class CourseService {
 
         courseRepository.save(course);
 
-        return course;
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    public List<Course> deleteCourse(Long courseId) throws CourseNotFoundException{
+    public ResponseEntity<String> deleteCourse(Long courseId) throws CourseNotFoundException{
         Course course = courseRepository.findById(courseId).orElseThrow(()-> new CourseNotFoundException("We couldn't find a course with the ID of " + courseId));
         courseRepository.delete(course);
 
-        return this.courseRepository.findAll();
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     public List<CourseDTO> getAllCourses(int page,int size){
         Pageable pageable = PageRequest.of(page,size);
         Page<Course> coursePage = this.courseRepository.findAll(pageable);
-        return coursePage.map(course-> new CourseDTO(course.getName(), course.getDescription(), course.getReleaseDate(),course.getCategory(),course.getLevel(),course.getImage())).stream().toList();
+        return coursePage.map(course-> new CourseDTO(
+            course.getName(), 
+            course.getDescription(), 
+            course.getReleaseDate(),
+            course.getCategory(),
+            course.getLevel(),
+            course.getImage()))
+            .stream()
+            .toList();
     }
 
     public Course getCourseByName(String name) throws Exception{
-        return this.courseRepository.findByName(name).orElseThrow(()-> new Exception("This Course Doesn't Exists !"));
+        return this.courseRepository.findByName(name).orElseThrow(()-> new CourseNotFoundException(String.format("There's no %s course",name)));
     }
 
 
@@ -80,7 +90,7 @@ public class CourseService {
                 .toList();
     }
 
-    public Course updateCourseDetails(CourseDTO courseDetails, Long courseId)throws CourseNotFoundException{
+    public ResponseEntity<String> updateCourseDetails(CourseDTO courseDetails, Long courseId)throws CourseNotFoundException{
         Course course = this.courseRepository.findById(courseId).orElseThrow(()-> new CourseNotFoundException("We couldn't find a course with the ID of " + courseId));
 
         course.setName(courseDetails.name());
@@ -92,6 +102,6 @@ public class CourseService {
 
         this.courseRepository.save(course);
 
-        return course;
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 }
