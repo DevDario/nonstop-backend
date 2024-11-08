@@ -21,7 +21,7 @@ public class CourseService {
     private final CourseRepository courseRepository;
 
     public Course getCourseById(Long courseId) throws CourseNotFoundException{
-        return courseRepository.findById(courseId).orElseThrow(() -> new CourseNotFoundException(courseId));
+        return courseRepository.findById(courseId).orElseThrow(() -> new CourseNotFoundException("We couldn't find a course with the ID of " + courseId));
     }
 
     public Course createCourse(CourseDTO courseDTO){
@@ -40,7 +40,7 @@ public class CourseService {
     }
 
     public List<Course> deleteCourse(Long courseId) throws CourseNotFoundException{
-        Course course = courseRepository.findById(courseId).orElseThrow(()-> new CourseNotFoundException(courseId));
+        Course course = courseRepository.findById(courseId).orElseThrow(()-> new CourseNotFoundException("We couldn't find a course with the ID of " + courseId));
         courseRepository.delete(course);
 
         return this.courseRepository.findAll();
@@ -81,7 +81,7 @@ public class CourseService {
     }
 
     public Course updateCourseDetails(CourseDTO courseDetails, Long courseId)throws CourseNotFoundException{
-        Course course = this.courseRepository.findById(courseId).orElseThrow(()-> new CourseNotFoundException(courseId));
+        Course course = this.courseRepository.findById(courseId).orElseThrow(()-> new CourseNotFoundException("We couldn't find a course with the ID of " + courseId));
 
         course.setName(courseDetails.name());
         course.setDescription(courseDetails.description());
