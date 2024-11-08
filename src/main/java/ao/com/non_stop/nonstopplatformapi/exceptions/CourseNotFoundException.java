@@ -1,8 +1,11 @@
 package ao.com.non_stop.nonstopplatformapi.exceptions;
 
-public class CourseNotFoundException extends Exception {
-    public CourseNotFoundException(Long id){
-        super(String.format("There's no course with id of -> %d", id));
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
+
+@ResponseStatus(HttpStatus.NOT_FOUND)
+public class CourseNotFoundException extends RuntimeException {
+    public CourseNotFoundException(String message){
+        super(message);
     }
 }
-
