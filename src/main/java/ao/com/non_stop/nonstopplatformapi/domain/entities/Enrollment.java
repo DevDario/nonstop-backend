@@ -1,0 +1,42 @@
+package ao.com.non_stop.nonstopplatformapi.domain.entities;
+
+import ao.com.non_stop.nonstopplatformapi.domain.actors.Student;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.util.Date;
+
+@Entity
+@Table
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+public class Enrollment {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @CreationTimestamp
+    @Column(name = "enrollment_date", nullable = false)
+    private Date enrollment_date;
+
+    @Column(name = "progress_percentage", nullable = false)
+    private Float progress;
+
+    @Column(name = "is_completed", nullable = false)
+    private Boolean is_completed;
+
+    @ManyToOne
+    @JoinColumn(name = "student_id", nullable = false)
+    private Student student_id;
+
+    @ManyToOne
+    @JoinColumn(name = "course_id", nullable = false)
+    private Course course_id;
+}
