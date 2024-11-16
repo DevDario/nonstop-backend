@@ -40,4 +40,13 @@ public class Course {
 
     @Column
     private String image;
+
+    @Column(nullable = false)
+    private Long duration;
+
+    @Column(nullable = false)
+    private String language;
+
+    @Column(nullable = false)
+    private int rating;
 }
