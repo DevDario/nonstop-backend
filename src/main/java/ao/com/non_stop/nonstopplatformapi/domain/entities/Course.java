@@ -1,4 +1,4 @@
-package ao.com.non_stop.nonstopplatformapi.domain;
+package ao.com.non_stop.nonstopplatformapi.domain.entities;
 
 import ao.com.non_stop.nonstopplatformapi.enums.CourseCategory;
 import ao.com.non_stop.nonstopplatformapi.enums.CourseLevel;

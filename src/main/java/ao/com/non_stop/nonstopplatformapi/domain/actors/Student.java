@@ -1,4 +1,4 @@
-package ao.com.non_stop.nonstopplatformapi.domain;
+package ao.com.non_stop.nonstopplatformapi.domain.actors;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;

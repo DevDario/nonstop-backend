@@ -1,6 +1,6 @@
 package ao.com.non_stop.nonstopplatformapi.repositories;
 
-import ao.com.non_stop.nonstopplatformapi.domain.Course;
+import ao.com.non_stop.nonstopplatformapi.domain.entities.Course;
 import ao.com.non_stop.nonstopplatformapi.enums.CourseCategory;
 import ao.com.non_stop.nonstopplatformapi.enums.CourseLevel;
 import org.springframework.data.domain.Page;
