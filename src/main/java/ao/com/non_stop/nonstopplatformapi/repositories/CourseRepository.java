@@ -18,11 +18,15 @@ public interface CourseRepository extends JpaRepository<Course,Long> {
 
     @Query("SELECT c FROM Course c " +
             "WHERE (:category = '' OR c.category = :category) " +
-            "AND (:level = '' OR c.level = :level) "
+            "AND (:level = '' OR c.level = :level) " +
+            "AND (:language = '' OR c.language = :language) " +
+            "AND (:rating = 0 OR c.rating >= :rating)"
     )
     Page<Course> findFilteredCourses(
             @Param("category") CourseCategory category,
             @Param("level")CourseLevel level,
+            @Param("language") String language,
+            @Param("rating") Float rating,
             Pageable pageable
             );
 }

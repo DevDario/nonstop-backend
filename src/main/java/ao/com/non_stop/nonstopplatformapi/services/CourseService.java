@@ -74,16 +74,20 @@ public class CourseService {
     }
 
 
-    public List<CourseDTO> getFilteredCourses(int page, int size, CourseCategory category, CourseLevel level){
+    public List<CourseDTO> getFilteredCourses(int page, int size, CourseCategory category, CourseLevel level, String language, Float rating){
 
         category = (category!=null) ? category:CourseCategory.WEB;
         level = (level!=null) ? level:CourseLevel.BEGINNER;
+        language = (language!=null) ? language:"english";
+        rating = (rating!=null) ? rating:3.0F;
 
         Pageable pageable = PageRequest.of(page,size);
 
         Page<Course> coursePage = this.courseRepository.findFilteredCourses(
                 category,
                 level,
+                language,
+                rating,
                 pageable);
 
         return coursePage.map(course-> new CourseDTO(

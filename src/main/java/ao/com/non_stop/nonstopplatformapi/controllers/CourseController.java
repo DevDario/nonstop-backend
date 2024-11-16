@@ -55,9 +55,11 @@ public class CourseController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "3") int size,
             @RequestParam(required = false) CourseCategory category,
-            @RequestParam(required = false) CourseLevel level
+            @RequestParam(required = false) CourseLevel level,
+            @RequestParam(required = false) String language,
+            @RequestParam(required = false) Float rating
     ){
-        List<CourseDTO> courses = this.courseService.getFilteredCourses(page,size,category,level);
+        List<CourseDTO> courses = this.courseService.getFilteredCourses(page,size,category,level, language, rating);
         return ResponseEntity.ok(courses);
     }
 
