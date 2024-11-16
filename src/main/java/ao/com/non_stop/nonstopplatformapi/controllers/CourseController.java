@@ -1,7 +1,7 @@
 package ao.com.non_stop.nonstopplatformapi.controllers;
 
 import ao.com.non_stop.nonstopplatformapi.dtos.CourseDTO;
-import ao.com.non_stop.nonstopplatformapi.entities.Course;
+import ao.com.non_stop.nonstopplatformapi.domain.Course;
 import ao.com.non_stop.nonstopplatformapi.enums.CourseCategory;
 import ao.com.non_stop.nonstopplatformapi.enums.CourseLevel;
 import ao.com.non_stop.nonstopplatformapi.exceptions.CourseNotFoundException;

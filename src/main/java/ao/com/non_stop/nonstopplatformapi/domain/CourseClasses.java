@@ -1,9 +1,8 @@
-package ao.com.non_stop.nonstopplatformapi.entities;
+package ao.com.non_stop.nonstopplatformapi.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.boot.context.properties.bind.DefaultValue;
 
 @Entity
 @Table(name = "course_classes")
