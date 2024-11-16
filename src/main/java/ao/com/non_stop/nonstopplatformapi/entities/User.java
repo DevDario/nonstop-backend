@@ -1,5 +1,6 @@
 package ao.com.non_stop.nonstopplatformapi.entities;
 
+import ao.com.non_stop.nonstopplatformapi.enums.Roles;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -21,6 +22,10 @@ public abstract class User{
 
     @Column(name = "password", nullable = false, length = 8)
     private String password;
+
+    @Column(name = "role")
+    @Enumerated(EnumType.STRING)
+    private Roles role;
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false)
