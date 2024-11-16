@@ -3,6 +3,7 @@ package ao.com.non_stop.nonstopplatformapi.entities;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 
 @Entity
 @Table(name = "course_classes")
@@ -26,8 +27,8 @@ public class CourseClasses {
     private Long duration;
 
     //represents the order of the current content on the course content list
-    @Column(nullable = false)
-    private Long order;
+    @Column(nullable = false, name = "content_order")
+    private Long content_order;
 
     @Column(name = "content_url", nullable = false)
     private String content_url;
@@ -39,5 +40,5 @@ public class CourseClasses {
     @ManyToOne
     @JsonBackReference
     @JoinColumn(name = "course_id", nullable = false)
-    private Long course_id;
+    private Course course_id;
 }
