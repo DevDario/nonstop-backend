@@ -34,6 +34,9 @@ public class CourseService {
                 .category(courseDTO.category())
                 .level(courseDTO.level())
                 .image(courseDTO.image())
+                .duration(courseDTO.duration())
+                .language(courseDTO.language())
+                .rating(courseDTO.rating())
                 .build();
 
         courseRepository.save(course);
@@ -52,12 +55,16 @@ public class CourseService {
         Pageable pageable = PageRequest.of(page,size);
         Page<Course> coursePage = this.courseRepository.findAll(pageable);
         return coursePage.map(course-> new CourseDTO(
-            course.getName(), 
-            course.getDescription(), 
+            course.getName(),
+            course.getDescription(),
             course.getReleaseDate(),
             course.getCategory(),
             course.getLevel(),
-            course.getImage()))
+            course.getImage(),
+                        course.getDuration(),
+                        course.getLanguage(),
+                        course.getRating()
+                ))
             .stream()
             .toList();
     }
@@ -85,7 +92,11 @@ public class CourseService {
                         course.getReleaseDate(),
                         course.getCategory(),
                         course.getLevel(),
-                        course.getImage()))
+                        course.getImage(),
+                        course.getDuration(),
+                        course.getLanguage(),
+                        course.getRating()
+                ))
                 .stream()
                 .toList();
     }
@@ -99,6 +110,9 @@ public class CourseService {
         course.setLevel(courseDetails.level());
         course.setReleaseDate(courseDetails.releaseDate());
         course.setImage(courseDetails.image());
+        course.setDuration(courseDetails.duration());
+        course.setLanguage(courseDetails.language());
+        course.setRating(courseDetails.rating());
 
         this.courseRepository.save(course);
 

@@ -5,5 +5,5 @@ import ao.com.non_stop.nonstopplatformapi.enums.CourseLevel;
 
 import java.util.Date;
 
-public record CourseDTO(String name, String description, Date releaseDate, CourseCategory category, CourseLevel level, String image) {
+public record CourseDTO(String name, String description, Date releaseDate, CourseCategory category, CourseLevel level, String image, Long duration, String language, Float rating) {
 }
