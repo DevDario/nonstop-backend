@@ -41,6 +41,7 @@ public class Course {
     @Column
     private String image;
 
+    //in minutes
     @Column(nullable = false)
     private Long duration;
 
@@ -48,5 +49,5 @@ public class Course {
     private String language;
 
     @Column(nullable = false)
-    private int rating;
+    private Float rating;
 }
