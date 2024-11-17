@@ -65,5 +65,5 @@ public class Course {
 
     @OneToMany(mappedBy = "course_id", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
-    private List<CourseClasses> classes;
+    private List<CourseClasses> courseClasses;
 }
