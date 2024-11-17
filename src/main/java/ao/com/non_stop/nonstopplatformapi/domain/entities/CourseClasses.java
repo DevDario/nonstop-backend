@@ -2,6 +2,8 @@ package ao.com.non_stop.nonstopplatformapi.domain.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 
 @Entity
@@ -18,7 +20,9 @@ public class CourseClasses {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @NotBlank
+    @Size(max = 100, message = "Title cannot exceed 100 characters")
+    @Column(nullable = false, length = 100)
     private String title;
 
     //in minutes
@@ -29,6 +33,7 @@ public class CourseClasses {
     @Column(nullable = false, name = "content_order")
     private Long content_order;
 
+    @NotBlank
     @Column(name = "content_url", nullable = false)
     private String content_url;
 
@@ -39,5 +44,5 @@ public class CourseClasses {
     @ManyToOne
     @JsonBackReference
     @JoinColumn(name = "course_id", nullable = false)
-    private Course course_id;
+    private Course course;
 }
