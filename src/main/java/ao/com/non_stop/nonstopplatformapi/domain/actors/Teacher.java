@@ -1,8 +1,7 @@
 package ao.com.non_stop.nonstopplatformapi.domain.actors;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import ao.com.non_stop.nonstopplatformapi.enums.Roles;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,4 +21,6 @@ public class Teacher extends User{
     @Size(max = 255, message = "Specialization cannot exceed 255 characters.")
     @Column(name = "specialization", nullable = false)
     private String specialization;
+
+    private final Roles role = Roles.TEACHER;
 }
