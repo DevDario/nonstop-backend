@@ -48,8 +48,8 @@ public class Course {
     @Enumerated(EnumType.STRING)
     private CourseLevel level;
 
-    @Column
-    private String image;
+    @Column(name = "image_url")
+    private String imageUrl;
 
     //in minutes
     @Column(nullable = false)
