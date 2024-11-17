@@ -83,4 +83,10 @@ public class CourseController {
     public ResponseEntity<String> updateCourseDetails(@RequestBody CourseDTO body, @PathVariable Long courseId) throws CourseNotFoundException{
         return this.courseService.updateCourseDetails(body,courseId);
     }
+
+    //dev env use only
+    @PostMapping("/list/")
+    public ResponseEntity<String> createMultipleCourse(@RequestBody List<Course> body){
+        return this.courseService.createMultipleCourses(body);
+    }
 }
