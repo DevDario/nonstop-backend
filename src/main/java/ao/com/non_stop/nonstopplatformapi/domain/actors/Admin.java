@@ -10,6 +10,5 @@ import lombok.NoArgsConstructor;
 @Table
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor
 public class Admin extends User{
 }

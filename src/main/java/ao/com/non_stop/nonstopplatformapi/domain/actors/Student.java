@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "students")
 @AllArgsConstructor
-@NoArgsConstructor
 @Builder
 public class Student extends User{
 
