@@ -27,12 +27,12 @@ public class Course {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
+    @NotBlank(message = "You must inform the title of the Course")
     @Size(max = 100, message = "Name cannot exceed 100 characters")
     @Column(nullable = false, length = 100)
     private String name;
 
-    @NotBlank
+    @NotBlank(message = "You need to add a description about the Course")
     @Size(max = 120, message = "Description cannot exceed 120 characters")
     @Column(nullable = false, length = 120)
     private String description;
@@ -55,15 +55,14 @@ public class Course {
     @Column(nullable = false)
     private Long duration;
 
-    @NotBlank
+    @NotBlank(message = "You need to inform the language of the Course")
     @Column(nullable = false)
     private String language;
 
-    @NotBlank
     @Column(nullable = false)
     private Float rating = 3.0F;
 
-    @OneToMany(mappedBy = "course_id", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<CourseClasses> courseClasses;
 }
