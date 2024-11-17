@@ -4,6 +4,10 @@ import ao.com.non_stop.nonstopplatformapi.enums.CourseCategory;
 import ao.com.non_stop.nonstopplatformapi.enums.CourseLevel;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import jakarta.validation.Valid;
+import jakarta.validation.Validator;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.util.Date;
@@ -23,10 +27,14 @@ public class Course {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @NotBlank
+    @Size(max = 100, message = "Name cannot exceed 100 characters")
+    @Column(nullable = false, length = 100)
     private String name;
 
-    @Column(nullable = false)
+    @NotBlank
+    @Size(max = 120, message = "Description cannot exceed 120 characters")
+    @Column(nullable = false, length = 120)
     private String description;
 
     @Column(nullable = false)
@@ -47,11 +55,13 @@ public class Course {
     @Column(nullable = false)
     private Long duration;
 
+    @NotBlank
     @Column(nullable = false)
     private String language;
 
+    @NotBlank
     @Column(nullable = false)
-    private Float rating;
+    private Float rating = 3.0F;
 
     @OneToMany(mappedBy = "course_id", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
