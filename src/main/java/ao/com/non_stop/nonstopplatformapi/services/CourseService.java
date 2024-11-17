@@ -1,6 +1,7 @@
 package ao.com.non_stop.nonstopplatformapi.services;
 
-import ao.com.non_stop.nonstopplatformapi.dtos.CourseDTO;
+import ao.com.non_stop.nonstopplatformapi.dtos.course.CourseRequestDTO;
+import ao.com.non_stop.nonstopplatformapi.dtos.course.CourseResponseDTO;
 import ao.com.non_stop.nonstopplatformapi.domain.entities.Course;
 import ao.com.non_stop.nonstopplatformapi.enums.CourseCategory;
 import ao.com.non_stop.nonstopplatformapi.enums.CourseLevel;
@@ -26,17 +27,17 @@ public class CourseService {
         return courseRepository.findById(courseId).orElseThrow(() -> new CourseNotFoundException("We couldn't find a course with the ID of " + courseId));
     }
 
-    public ResponseEntity<String> createCourse(CourseDTO courseDTO){
+    public ResponseEntity<String> createCourse(CourseRequestDTO newCourse){
         Course course = Course.builder()
-                .name(courseDTO.name())
-                .description(courseDTO.description())
-                .releaseDate(courseDTO.releaseDate())
-                .category(courseDTO.category())
-                .level(courseDTO.level())
-                .image(courseDTO.image())
-                .duration(courseDTO.duration())
-                .language(courseDTO.language())
-                .rating(courseDTO.rating())
+                .name(newCourse.name())
+                .description(newCourse.description())
+                .releaseDate(newCourse.releaseDate())
+                .category(newCourse.category())
+                .level(newCourse.level())
+                .imageUrl(newCourse.imageUrl())
+                .duration(newCourse.duration())
+                .language(newCourse.language())
+                .rating(newCourse.rating())
                 .build();
 
         courseRepository.save(course);
@@ -51,19 +52,21 @@ public class CourseService {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    public List<CourseDTO> getAllCourses(int page,int size){
+    public List<CourseResponseDTO> getAllCourses(int page,int size){
         Pageable pageable = PageRequest.of(page,size);
         Page<Course> coursePage = this.courseRepository.findAll(pageable);
-        return coursePage.map(course-> new CourseDTO(
+        return coursePage.map(course-> new CourseResponseDTO(
+                        course.getId(),
             course.getName(),
             course.getDescription(),
             course.getReleaseDate(),
             course.getCategory(),
             course.getLevel(),
-            course.getImage(),
+            course.getImageUrl(),
                         course.getDuration(),
                         course.getLanguage(),
-                        course.getRating()
+                        course.getRating(),
+                course.getCourseClasses()
                 ))
             .stream()
             .toList();
@@ -74,7 +77,7 @@ public class CourseService {
     }
 
 
-    public List<CourseDTO> getFilteredCourses(int page, int size, CourseCategory category, CourseLevel level, String language, Float rating){
+    public List<CourseResponseDTO> getFilteredCourses(int page, int size, CourseCategory category, CourseLevel level, String language, Float rating){
 
         category = (category!=null) ? category:CourseCategory.WEB;
         level = (level!=null) ? level:CourseLevel.BEGINNER;
@@ -90,22 +93,24 @@ public class CourseService {
                 rating,
                 pageable);
 
-        return coursePage.map(course-> new CourseDTO(
+        return coursePage.map(course-> new CourseResponseDTO(
+                course.getId(),
                         course.getName(),
                         course.getDescription(),
                         course.getReleaseDate(),
                         course.getCategory(),
                         course.getLevel(),
-                        course.getImage(),
+                        course.getImageUrl(),
                         course.getDuration(),
                         course.getLanguage(),
-                        course.getRating()
+                        course.getRating(),
+                course.getCourseClasses()
                 ))
                 .stream()
                 .toList();
     }
 
-    public ResponseEntity<String> updateCourseDetails(CourseDTO courseDetails, Long courseId)throws CourseNotFoundException{
+    public ResponseEntity<String> updateCourseDetails(CourseRequestDTO courseDetails, Long courseId)throws CourseNotFoundException{
         Course course = this.courseRepository.findById(courseId).orElseThrow(()-> new CourseNotFoundException("We couldn't find a course with the ID of " + courseId));
 
         course.setName(courseDetails.name());
@@ -113,7 +118,7 @@ public class CourseService {
         course.setCategory(courseDetails.category());
         course.setLevel(courseDetails.level());
         course.setReleaseDate(courseDetails.releaseDate());
-        course.setImage(courseDetails.image());
+        course.setImageUrl(courseDetails.imageUrl());
         course.setDuration(courseDetails.duration());
         course.setLanguage(courseDetails.language());
         course.setRating(courseDetails.rating());
@@ -125,19 +130,19 @@ public class CourseService {
 
     // dev env use only
 
-    public ResponseEntity<String> createMultipleCourses(List<Course> courses){
+    public ResponseEntity<String> createMultipleCourses(List<CourseRequestDTO> courses){
 
         List<Course> newCourses = courses.stream()
                 .map(course -> Course.builder()
-                        .name(course.getName())
-                        .description(course.getDescription())
-                        .releaseDate(course.getReleaseDate())
-                        .category(course.getCategory())
-                        .level(course.getLevel())
-                        .image(course.getImage())
-                        .duration(course.getDuration())
-                        .language(course.getLanguage())
-                        .rating(course.getRating())
+                        .name(course.name())
+                        .description(course.description())
+                        .releaseDate(course.releaseDate())
+                        .category(course.category())
+                        .level(course.level())
+                        .imageUrl(course.imageUrl())
+                        .duration(course.duration())
+                        .language(course.language())
+                        .rating(course.rating())
                         .build()
                 ).toList();
 

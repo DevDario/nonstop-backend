@@ -1,7 +1,8 @@
 package ao.com.non_stop.nonstopplatformapi.controllers;
 
-import ao.com.non_stop.nonstopplatformapi.dtos.CourseDTO;
+import ao.com.non_stop.nonstopplatformapi.dtos.course.CourseRequestDTO;
 import ao.com.non_stop.nonstopplatformapi.domain.entities.Course;
+import ao.com.non_stop.nonstopplatformapi.dtos.course.CourseResponseDTO;
 import ao.com.non_stop.nonstopplatformapi.enums.CourseCategory;
 import ao.com.non_stop.nonstopplatformapi.enums.CourseLevel;
 import ao.com.non_stop.nonstopplatformapi.exceptions.CourseNotFoundException;
@@ -23,23 +24,23 @@ public class CourseController {
     private final CourseService courseService;
 
     @GetMapping("/{courseId}")
-    public ResponseEntity<CourseDTO> getCourse(@PathVariable Long courseId) throws CourseNotFoundException {
+    public ResponseEntity<CourseResponseDTO> getCourse(@PathVariable Long courseId) throws CourseNotFoundException {
         Course course = courseService.getCourseById(courseId);
 
-        String base64Image = course.getImage() != null ? Base64.getEncoder().encodeToString(course.getImage().getBytes()) : null;
-
-        CourseDTO courseDTO = new CourseDTO(
+        CourseResponseDTO response = new CourseResponseDTO(
+                course.getId(),
                 course.getName(),
                 course.getDescription(),
                 course.getReleaseDate(),
                 course.getCategory(),
                 course.getLevel(),
-                base64Image,
+                course.getImageUrl(),
                 course.getDuration(),
                 course.getLanguage(),
-                course.getRating());
+                course.getRating(),
+                course.getCourseClasses());
 
-        return ResponseEntity.ok(courseDTO);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/name/{name}")
@@ -51,7 +52,7 @@ public class CourseController {
     }
 
     @GetMapping("/filter/")
-    public ResponseEntity<List<CourseDTO>> filterCourses(
+    public ResponseEntity<List<CourseResponseDTO>> filterCourses(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "3") int size,
             @RequestParam(required = false) CourseCategory category,
@@ -59,12 +60,12 @@ public class CourseController {
             @RequestParam(required = false) String language,
             @RequestParam(required = false) Float rating
     ){
-        List<CourseDTO> courses = this.courseService.getFilteredCourses(page,size,category,level, language, rating);
+        List<CourseResponseDTO> courses = this.courseService.getFilteredCourses(page,size,category,level, language, rating);
         return ResponseEntity.ok(courses);
     }
 
     @PostMapping("/")
-    public ResponseEntity<String> createCourse(@RequestBody CourseDTO body){
+    public ResponseEntity<String> createCourse(@RequestBody CourseRequestDTO body){
         return this.courseService.createCourse(body);
     }
 
@@ -74,19 +75,19 @@ public class CourseController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<CourseDTO>> getAllCourses(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int size){
-        List<CourseDTO> allCourses = this.courseService.getAllCourses(page,size);
+    public ResponseEntity<List<CourseResponseDTO>> getAllCourses(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int size){
+        List<CourseResponseDTO> allCourses = this.courseService.getAllCourses(page,size);
         return ResponseEntity.ok(allCourses);
     }
 
     @PutMapping("/{courseId}")
-    public ResponseEntity<String> updateCourseDetails(@RequestBody CourseDTO body, @PathVariable Long courseId) throws CourseNotFoundException{
+    public ResponseEntity<String> updateCourseDetails(@RequestBody CourseRequestDTO body, @PathVariable Long courseId) throws CourseNotFoundException{
         return this.courseService.updateCourseDetails(body,courseId);
     }
 
     //dev env use only
     @PostMapping("/list/")
-    public ResponseEntity<String> createMultipleCourse(@RequestBody List<Course> body){
+    public ResponseEntity<String> createMultipleCourse(@RequestBody List<CourseRequestDTO> body){
         return this.courseService.createMultipleCourses(body);
     }
 }
