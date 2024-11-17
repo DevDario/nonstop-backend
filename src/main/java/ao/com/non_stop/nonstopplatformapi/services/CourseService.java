@@ -122,4 +122,27 @@ public class CourseService {
 
         return ResponseEntity.status(HttpStatus.OK).build();
     }
+
+    // dev env use only
+
+    public ResponseEntity<String> createMultipleCourses(List<Course> courses){
+
+        List<Course> newCourses = courses.stream()
+                .map(course -> Course.builder()
+                        .name(course.getName())
+                        .description(course.getDescription())
+                        .releaseDate(course.getReleaseDate())
+                        .category(course.getCategory())
+                        .level(course.getLevel())
+                        .image(course.getImage())
+                        .duration(course.getDuration())
+                        .language(course.getLanguage())
+                        .rating(course.getRating())
+                        .build()
+                ).toList();
+
+        this.courseRepository.saveAll(newCourses);
+
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
 }
