@@ -35,7 +35,7 @@ public abstract class User{
     @NotNull
     @Column(name = "role")
     @Enumerated(EnumType.STRING)
-    private Roles role;
+    private Roles role = Roles.USER;
 
     @NotNull
     @CreationTimestamp
