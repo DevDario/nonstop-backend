@@ -20,7 +20,7 @@ public class CourseClasses {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
+    @NotBlank(message = "You need to inform the title of this Class")
     @Size(max = 100, message = "Title cannot exceed 100 characters")
     @Column(nullable = false, length = 100)
     private String title;
@@ -33,7 +33,7 @@ public class CourseClasses {
     @Column(nullable = false, name = "content_order")
     private Long content_order;
 
-    @NotBlank
+    @NotBlank(message = "You need to inform this content url")
     @Column(name = "content_url", nullable = false)
     private String content_url;
 
