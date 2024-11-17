@@ -1,11 +1,15 @@
 package ao.com.non_stop.nonstopplatformapi.domain.actors;
 
+import ao.com.non_stop.nonstopplatformapi.domain.entities.Course;
 import ao.com.non_stop.nonstopplatformapi.enums.Roles;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Entity
 @Table(name = "teachers")
@@ -23,4 +27,8 @@ public class Teacher extends User{
     private String specialization;
 
     private final Roles role = Roles.TEACHER;
+
+    @OneToMany(mappedBy = "teacher", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<Course> created_courses;
 }

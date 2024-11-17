@@ -1,7 +1,9 @@
 package ao.com.non_stop.nonstopplatformapi.domain.entities;
 
+import ao.com.non_stop.nonstopplatformapi.domain.actors.Teacher;
 import ao.com.non_stop.nonstopplatformapi.enums.CourseCategory;
 import ao.com.non_stop.nonstopplatformapi.enums.CourseLevel;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
@@ -65,4 +67,9 @@ public class Course {
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<CourseClasses> courseClasses;
+
+    @ManyToOne
+    @JoinColumn(name = "teacher_id", nullable = false)
+    @JsonBackReference
+    private Teacher teacher;
 }
