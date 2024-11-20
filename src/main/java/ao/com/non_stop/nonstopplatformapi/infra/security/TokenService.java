@@ -36,6 +36,10 @@ public class TokenService {
         return (email.equals(user.getEmail()) && !isTokenExpired(token));
     }
 
+    public String validateToken(String token){
+        return Jwts.claims().getSubject();
+    }
+
     public Key getSignInKey(){
         byte[] keyBytes = Decoders.BASE64URL.decode(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);
@@ -62,6 +66,12 @@ public class TokenService {
     private String extractEmail(String token){
         Claims claims = extractAllClaims(token);
         return claims.getSubject();
+    }
+
+
+    public String extractRole(String token){
+        Claims claims = extractAllClaims(token);
+        return claims.get("ROLE").toString();
     }
 
 }
