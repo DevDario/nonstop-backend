@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import java.security.Key;
 import java.util.Date;
-import java.util.Map;
 
 @Service
 public class TokenService {
@@ -22,9 +21,9 @@ public class TokenService {
     @Value("${security.jwt.expiration-time}")
     private long expirationDate;
 
-    public String generateToken(Map<String, Object> claims, User user){
+    public String generateToken(User user, String role){
         return Jwts.builder()
-                .setClaims(claims)
+                .claim("ROLE",role)
                 .setSubject(user.getEmail())
                 .setExpiration(new Date(System.currentTimeMillis() + expirationDate))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
