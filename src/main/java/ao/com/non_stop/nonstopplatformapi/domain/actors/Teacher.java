@@ -7,14 +7,12 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Entity
 @Table(name = "teachers")
 @AllArgsConstructor
-@NoArgsConstructor
 @Builder
 public class Teacher extends User{
 
@@ -26,9 +24,11 @@ public class Teacher extends User{
     @Column(name = "specialization", nullable = false)
     private String specialization;
 
-    private final Roles role = Roles.TEACHER;
-
     @OneToMany(mappedBy = "teacher", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<Course> created_courses;
+
+    public Teacher(){
+        this.setRole(Roles.TEACHER);
+    }
 }

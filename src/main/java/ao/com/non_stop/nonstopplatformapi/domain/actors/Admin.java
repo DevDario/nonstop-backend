@@ -20,5 +20,7 @@ public class Admin extends User{
     @Column(nullable = false)
     private Date last_login;
 
-    private final Roles role = Roles.ADMIN;
+    public Admin(){
+        this.setRole(Roles.ADMIN);
+    }
 }
