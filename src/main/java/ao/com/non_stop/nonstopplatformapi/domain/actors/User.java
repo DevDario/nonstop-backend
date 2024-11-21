@@ -40,5 +40,18 @@ public abstract class User{
     @NotNull
     @CreationTimestamp
     @Column(name = "created_at", nullable = false)
-    private Date created_at;
+    private String created_at;
+
+    @Column(nullable = false)
+    private String updated_at;
+
+    @PrePersist
+    protected void onCreate(){
+        created_at = updated_at = java.time.LocalDateTime.now().toString();
+    }
+
+    @PreUpdate
+    protected void onUpdate(){
+        updated_at = java.time.LocalDateTime.now().toString();
+    }
 }
