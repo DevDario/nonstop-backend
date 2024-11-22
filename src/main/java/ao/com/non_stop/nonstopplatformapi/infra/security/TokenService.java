@@ -26,7 +26,7 @@ public class TokenService {
                 .claim("ROLE",role)
                 .setSubject(user.getEmail())
                 .setExpiration(new Date(System.currentTimeMillis() + expirationDate))
-                .signWith(getSignInKey(), SignatureAlgorithm.HS256)
+                .signWith(Keys.secretKeyFor(SignatureAlgorithm.HS256))
                 .compact();
     }
 
