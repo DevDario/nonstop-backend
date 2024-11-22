@@ -7,6 +7,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
@@ -14,6 +16,8 @@ import java.util.List;
 @Table(name = "teachers")
 @AllArgsConstructor
 @Builder
+@Getter
+@Setter
 public class Teacher extends User{
 
     @Size(max = 110, message = "About Me cannot exceed 110 characters.")
