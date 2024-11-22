@@ -56,7 +56,7 @@ public class TokenService {
     private Claims extractAllClaims(String token){
         return Jwts
                 .parserBuilder()
-                .setSigningKey(getSignInKey())
+                .setSigningKey(Keys.secretKeyFor(SignatureAlgorithm.HS256))
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
@@ -65,12 +65,6 @@ public class TokenService {
     private String extractEmail(String token){
         Claims claims = extractAllClaims(token);
         return claims.getSubject();
-    }
-
-
-    public String extractRole(String token){
-        Claims claims = extractAllClaims(token);
-        return claims.get("ROLE").toString();
     }
 
 }
