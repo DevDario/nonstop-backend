@@ -26,8 +26,7 @@ public abstract class User{
     @Column(name = "email", nullable = false, unique = true)
     private String email;
 
-    @NotNull
-    @Size(min = 8, max = 12, message = "Password must have at least 8 charachters")
+    @NotNull(message = "You need to provide a Password for your account")
     @Column(name = "password", nullable = false)
     private String password;
 
