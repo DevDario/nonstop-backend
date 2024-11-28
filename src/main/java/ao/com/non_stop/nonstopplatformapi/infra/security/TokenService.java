@@ -7,6 +7,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
@@ -21,22 +22,18 @@ public class TokenService {
     @Value("${security.jwt.expiration-time}")
     private long expirationDate;
 
-    public String generateToken(User user, String role){
+    public String generateToken(User userDetails){
         return Jwts.builder()
-                .claim("ROLE",role)
-                .setSubject(user.getEmail())
+                .setSubject(userDetails.getEmail())
+                .setIssuedAt(new Date (System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + expirationDate))
                 .signWith(Keys.secretKeyFor(SignatureAlgorithm.HS256))
                 .compact();
     }
 
-    public boolean isTokenValid(String token, User user){
+    public boolean isTokenValid(String token, User userDetails){
         String email = extractEmail(token);
-        return (email.equals(user.getEmail()) && !isTokenExpired(token));
-    }
-
-    public String validateToken(String token){
-        return Jwts.claims().getSubject();
+        return (email.equals(userDetails.getEmail()) && !isTokenExpired(token));
     }
 
     public Key getSignInKey(){
@@ -62,7 +59,7 @@ public class TokenService {
                 .getBody();
     }
 
-    private String extractEmail(String token){
+    public String extractEmail(String token){
         Claims claims = extractAllClaims(token);
         return claims.getSubject();
     }
