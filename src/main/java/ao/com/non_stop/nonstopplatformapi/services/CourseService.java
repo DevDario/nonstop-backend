@@ -30,9 +30,9 @@ public class CourseService {
         return courseRepository.findById(courseId).orElseThrow(() -> new CourseNotFoundException("We couldn't find a course with the ID of " + courseId));
     }
 
-    public ResponseEntity<String> createCourse(CourseRequestDTO newCourse){
+    public ResponseEntity<String> createCourse(CourseRequestDTO newCourse) throws Exception{
 
-        Teacher teacher = this.teacherRepository.findByEmail(newCourse.teacher_email()).orElseThrow();
+        Teacher teacher = this.teacherRepository.findByEmail(newCourse.teacher_email()).orElseThrow(()-> new Exception("This Email Does not Belongs to Any Teacher !"));
 
         Course course = Course.builder()
                 .name(newCourse.name())

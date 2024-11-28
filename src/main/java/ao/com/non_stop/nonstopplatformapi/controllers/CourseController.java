@@ -65,7 +65,7 @@ public class CourseController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<String> createCourse(@RequestBody CourseRequestDTO body){
+    public ResponseEntity<String> createCourse(@RequestBody CourseRequestDTO body) throws Exception{
         return this.courseService.createCourse(body);
     }
 
