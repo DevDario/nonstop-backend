@@ -27,7 +27,7 @@ public class TokenService {
                 .setSubject(userDetails.getEmail())
                 .setIssuedAt(new Date (System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + expirationDate))
-                .signWith(Keys.secretKeyFor(SignatureAlgorithm.HS256))
+                .signWith(Keys.hmacShaKeyFor(secretKey.getBytes()),SignatureAlgorithm.HS256)
                 .compact();
     }
 
@@ -53,7 +53,7 @@ public class TokenService {
     private Claims extractAllClaims(String token){
         return Jwts
                 .parserBuilder()
-                .setSigningKey(Keys.secretKeyFor(SignatureAlgorithm.HS256))
+                .setSigningKey(secretKey.getBytes())
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
