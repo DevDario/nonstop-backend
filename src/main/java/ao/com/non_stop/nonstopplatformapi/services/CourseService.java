@@ -1,5 +1,6 @@
 package ao.com.non_stop.nonstopplatformapi.services;
 
+import ao.com.non_stop.nonstopplatformapi.domain.actors.Teacher;
 import ao.com.non_stop.nonstopplatformapi.dtos.course.CourseRequestDTO;
 import ao.com.non_stop.nonstopplatformapi.dtos.course.CourseResponseDTO;
 import ao.com.non_stop.nonstopplatformapi.domain.entities.Course;
@@ -7,6 +8,7 @@ import ao.com.non_stop.nonstopplatformapi.enums.CourseCategory;
 import ao.com.non_stop.nonstopplatformapi.enums.CourseLevel;
 import ao.com.non_stop.nonstopplatformapi.exceptions.CourseNotFoundException;
 import ao.com.non_stop.nonstopplatformapi.repositories.CourseRepository;
+import ao.com.non_stop.nonstopplatformapi.repositories.TeachersRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -22,12 +24,16 @@ import java.util.List;
 public class CourseService {
 
     private final CourseRepository courseRepository;
+    private final TeachersRepository teacherRepository;
 
     public Course getCourseById(Long courseId) throws CourseNotFoundException{
         return courseRepository.findById(courseId).orElseThrow(() -> new CourseNotFoundException("We couldn't find a course with the ID of " + courseId));
     }
 
     public ResponseEntity<String> createCourse(CourseRequestDTO newCourse){
+
+        Teacher teacher = this.teacherRepository.findByEmail(newCourse.teacher_email()).orElseThrow();
+
         Course course = Course.builder()
                 .name(newCourse.name())
                 .description(newCourse.description())
@@ -38,6 +44,7 @@ public class CourseService {
                 .duration(newCourse.duration())
                 .language(newCourse.language())
                 .rating(newCourse.rating())
+                .teacher(teacher)
                 .build();
 
         courseRepository.save(course);
