@@ -6,19 +6,16 @@ import ao.com.non_stop.nonstopplatformapi.domain.actors.Teacher;
 import ao.com.non_stop.nonstopplatformapi.domain.actors.User;
 import ao.com.non_stop.nonstopplatformapi.dtos.LoginRequestDTO;
 import ao.com.non_stop.nonstopplatformapi.dtos.RegisterRequestDTO;
-import ao.com.non_stop.nonstopplatformapi.dtos.ResponseDTO;
 import ao.com.non_stop.nonstopplatformapi.enums.Roles;
-import ao.com.non_stop.nonstopplatformapi.infra.security.CustomUserDetails;
 import ao.com.non_stop.nonstopplatformapi.infra.security.TokenService;
 import ao.com.non_stop.nonstopplatformapi.repositories.UsersRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Collections;
 
 @Service
 @AllArgsConstructor
@@ -53,6 +50,12 @@ public class AuthenticationService {
                 newUser.setEmail(registerDTO.email());
                 newUser.setRole(registerDTO.role());
                 newUser.setPassword(passwordEncoder.encode(registerDTO.password()));
+
+                Teacher teacher = (Teacher) newUser;
+                teacher.setAbout_me(registerDTO.about_me());
+                teacher.setSpecialization(registerDTO.specialization());
+                teacher.setCreated_courses(Collections.emptyList());
+
                 break;
 
             case Roles.STUDENT:
