@@ -8,6 +8,7 @@ import ao.com.non_stop.nonstopplatformapi.dtos.LoginRequestDTO;
 import ao.com.non_stop.nonstopplatformapi.dtos.RegisterRequestDTO;
 import ao.com.non_stop.nonstopplatformapi.dtos.ResponseDTO;
 import ao.com.non_stop.nonstopplatformapi.enums.Roles;
+import ao.com.non_stop.nonstopplatformapi.infra.security.CustomUserDetails;
 import ao.com.non_stop.nonstopplatformapi.infra.security.TokenService;
 import ao.com.non_stop.nonstopplatformapi.repositories.UsersRepository;
 import lombok.AllArgsConstructor;
@@ -28,11 +29,11 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
     private final TokenService tokenService;
 
-    public ResponseEntity<String> signup(RegisterRequestDTO registerDTO){
+    public User signup(RegisterRequestDTO registerDTO) throws Exception{
 
         // Check if the email is already taken
         if (userRepository.findByEmail(registerDTO.email()).isPresent()) {
-            return ResponseEntity.badRequest().body("Error: Email is already in use!");
+            throw new Exception("Error: Email is already in use!");
         }
 
         // Determine the role and create the corresponding user
@@ -63,36 +64,32 @@ public class AuthenticationService {
                 break;
 
             default:
-                return ResponseEntity.badRequest().body("Error: Invalid role specified!");
+                throw new Exception("Error: Invalid role specified!");
         }
 
         // Save the user to the database
-        String token = this.tokenService.generateToken(newUser,registerDTO.role().name());
         userRepository.save(newUser);
-        return ResponseEntity.ok().body(token);
+        return newUser;
     }
 
-    public ResponseEntity<ResponseDTO> login(LoginRequestDTO loginDTO){
+    public User login(LoginRequestDTO loginDTO) throws Exception{
 
         User user = this.userRepository.findByEmail(loginDTO.email()).orElseThrow(()-> new RuntimeException("User not found with email " + loginDTO.email()));
 
         if(passwordEncoder.matches(loginDTO.password(), user.getPassword())){
 
             try{
-                Authentication authentication = authenticationManager.authenticate(
+                authenticationManager.authenticate(
                         new UsernamePasswordAuthenticationToken(loginDTO.email(), loginDTO.password())
                 );
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-                System.out.println("principal authori -> " + authentication.getAuthorities().stream().toList() + "\n");
-                System.out.println("principal is authenticated ? -> " + authentication.isAuthenticated() + "\n");
+                System.out.println("\n Authenticated ! \n");
 
             }catch(Exception e){
                 throw new RuntimeException("Setting authenticated gone bad ! \n " + e);
             }
 
-            String token = this.tokenService.generateToken(user,user.getRole().name());
-            return ResponseEntity.ok().body( new ResponseDTO(user.getName(),token));
+            return user;
         }
-        return ResponseEntity.badRequest().build();
+        throw new Exception("Login gone wrong !");
     }
 }
