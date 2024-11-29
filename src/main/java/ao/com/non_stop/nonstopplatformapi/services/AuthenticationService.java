@@ -16,6 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -54,7 +55,7 @@ public class AuthenticationService {
                 Teacher teacher = (Teacher) newUser;
                 teacher.setAbout_me(registerDTO.about_me());
                 teacher.setSpecialization(registerDTO.specialization());
-                teacher.setCreated_courses(Collections.emptyList());
+                teacher.setCourses(List.of());
 
                 break;
 

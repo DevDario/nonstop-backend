@@ -30,7 +30,7 @@ public class Teacher extends User{
 
     @OneToMany(mappedBy = "teacher", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
-    private List<Course> created_courses;
+    private List<Course> courses;
 
     public Teacher(){
         this.setRole(Roles.TEACHER);
