@@ -1,6 +1,7 @@
 package ao.com.non_stop.nonstopplatformapi.services;
 
 import ao.com.non_stop.nonstopplatformapi.domain.actors.Teacher;
+import ao.com.non_stop.nonstopplatformapi.dtos.course.CourseOverviewResponseDTO;
 import ao.com.non_stop.nonstopplatformapi.dtos.course.CourseRequestDTO;
 import ao.com.non_stop.nonstopplatformapi.dtos.course.CourseResponseDTO;
 import ao.com.non_stop.nonstopplatformapi.domain.entities.Course;
@@ -15,6 +16,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,37 +28,9 @@ public class CourseService {
     private final CourseRepository courseRepository;
     private final TeachersRepository teacherRepository;
 
+    // acessible for all ROLES
     public Course getCourseById(Long courseId) throws CourseNotFoundException{
         return courseRepository.findById(courseId).orElseThrow(() -> new CourseNotFoundException("We couldn't find a course with the ID of " + courseId));
-    }
-
-    public ResponseEntity<String> createCourse(CourseRequestDTO newCourse) throws Exception{
-
-        Teacher teacher = this.teacherRepository.findByEmail(newCourse.teacher_email()).orElseThrow(()-> new Exception("This Email Does not Belongs to Any Teacher !"));
-
-        Course course = Course.builder()
-                .name(newCourse.name())
-                .description(newCourse.description())
-                .releaseDate(newCourse.releaseDate())
-                .category(newCourse.category())
-                .level(newCourse.level())
-                .imageUrl(newCourse.imageUrl())
-                .duration(newCourse.duration())
-                .language(newCourse.language())
-                .rating(newCourse.rating())
-                .teacher(teacher)
-                .build();
-
-        courseRepository.save(course);
-
-        return ResponseEntity.status(HttpStatus.CREATED).build();
-    }
-
-    public ResponseEntity<String> deleteCourse(Long courseId) throws CourseNotFoundException{
-        Course course = courseRepository.findById(courseId).orElseThrow(()-> new CourseNotFoundException("We couldn't find a course with the ID of " + courseId));
-        courseRepository.delete(course);
-
-        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     public List<CourseResponseDTO> getAllCourses(int page,int size){
@@ -82,7 +56,6 @@ public class CourseService {
     public Course getCourseByName(String name) throws Exception{
         return this.courseRepository.findByName(name).orElseThrow(()-> new CourseNotFoundException(String.format("There's no %s course",name)));
     }
-
 
     public List<CourseResponseDTO> getFilteredCourses(int page, int size, CourseCategory category, CourseLevel level, String language, Float rating){
 
@@ -117,6 +90,7 @@ public class CourseService {
                 .toList();
     }
 
+    // only for Users with ADMIN Role
     public ResponseEntity<String> updateCourseDetails(CourseRequestDTO courseDetails, Long courseId)throws CourseNotFoundException{
         Course course = this.courseRepository.findById(courseId).orElseThrow(()-> new CourseNotFoundException("We couldn't find a course with the ID of " + courseId));
 
@@ -135,8 +109,69 @@ public class CourseService {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    // dev env use only
+    public ResponseEntity<String> deleteCourse(Long courseId) throws CourseNotFoundException{
+        Course course = courseRepository.findById(courseId).orElseThrow(()-> new CourseNotFoundException("We couldn't find a course with the ID of " + courseId));
+        courseRepository.delete(course);
 
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    // Also for Users with TEACHER Role
+    public ResponseEntity<String> createCourse(CourseRequestDTO newCourse) throws Exception{
+
+        Teacher teacher = this.teacherRepository.findByEmail(newCourse.teacher_email()).orElseThrow(()-> new Exception("This Email Does not Belongs to Any Teacher !"));
+
+        Course course = Course.builder()
+                .name(newCourse.name())
+                .description(newCourse.description())
+                .releaseDate(newCourse.releaseDate())
+                .category(newCourse.category())
+                .level(newCourse.level())
+                .imageUrl(newCourse.imageUrl())
+                .duration(newCourse.duration())
+                .language(newCourse.language())
+                .rating(newCourse.rating())
+                .teacher(teacher)
+                .build();
+
+        courseRepository.save(course);
+
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+
+    // Teacher-Entity-Focused methds
+    public ResponseEntity<String> deleteCourseFromTeacher(String teacher_email, long course_id) throws Exception{
+        Teacher currentTeacher = this.teacherRepository.findByEmail(teacher_email).orElseThrow(()-> new UsernameNotFoundException("There is no Teacher With This Email !"));
+        Course courseToDelete = this.courseRepository.findByIdAndTeacher(course_id,currentTeacher);
+        this.courseRepository.delete(courseToDelete);
+
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    public List<CourseOverviewResponseDTO> getAllCoursesFromTeacher(int size, int page,String email) throws  Exception{
+        Teacher currentTeacher = this.teacherRepository.findByEmail(email).orElseThrow(()-> new UsernameNotFoundException("There is no Teacher With This Email !"));
+
+        Pageable pageable = PageRequest.of(page,size);
+        Page<Course> coursePage = this.courseRepository.findByTeacher(currentTeacher,pageable);
+        return coursePage.map(course-> new CourseOverviewResponseDTO(
+                        course.getId(),
+                        course.getName(),
+                        course.getDescription(),
+                        course.getReleaseDate(),
+                        course.getCategory(),
+                        course.getLevel(),
+                        course.getImageUrl(),
+                        course.getDuration(),
+                        course.getLanguage(),
+                        course.getRating()
+                ))
+                .stream()
+                .toList();
+    }
+
+
+    // dev env use only
     public ResponseEntity<String> createMultipleCourses(List<CourseRequestDTO> courses){
 
         List<Course> newCourses = courses.stream()
