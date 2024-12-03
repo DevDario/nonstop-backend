@@ -1,5 +1,6 @@
 package ao.com.non_stop.nonstopplatformapi.repositories;
 
+import ao.com.non_stop.nonstopplatformapi.domain.actors.Teacher;
 import ao.com.non_stop.nonstopplatformapi.domain.entities.Course;
 import ao.com.non_stop.nonstopplatformapi.enums.CourseCategory;
 import ao.com.non_stop.nonstopplatformapi.enums.CourseLevel;
@@ -10,6 +11,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -29,4 +31,8 @@ public interface CourseRepository extends JpaRepository<Course,Long> {
             @Param("rating") Float rating,
             Pageable pageable
             );
+
+    Course findByIdAndTeacher(long course_id, Teacher teacher);
+
+    Page<Course> findByTeacher(Teacher teacher,Pageable pageable);
 }
