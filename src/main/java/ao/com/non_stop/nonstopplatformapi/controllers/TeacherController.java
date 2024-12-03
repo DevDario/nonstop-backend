@@ -26,7 +26,7 @@ public class TeacherController {
 
     @DeleteMapping("/{course_id}")
     public ResponseEntity<String> deleteCourse(Principal principal, @PathVariable long course_id) throws Exception{
-        String email = principal.getName();
+        String email = this.getTeacherEmail(principal);
         return this.courseService.deleteCourseFromTeacher(email,course_id);
     }
 
@@ -34,8 +34,12 @@ public class TeacherController {
     public ResponseEntity<List<CourseOverviewResponseDTO>> getAllCourses(Principal principal,
                                                                          @RequestParam(defaultValue = "0") int page,
                                                                          @RequestParam(defaultValue = "5") int size) throws  Exception{
-        String email = principal.getName();
+        String email = this.getTeacherEmail(principal);
         List<CourseOverviewResponseDTO> allCourses = this.courseService.getAllCoursesFromTeacher(page,size,email);
         return ResponseEntity.ok(allCourses);
+    }
+
+    private String getTeacherEmail(Principal principal){
+        return principal.getName();
     }
 }
