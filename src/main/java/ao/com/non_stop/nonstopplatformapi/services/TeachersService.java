@@ -1,19 +1,77 @@
 package ao.com.non_stop.nonstopplatformapi.services;
 
+import ao.com.non_stop.nonstopplatformapi.domain.actors.Teacher;
+import ao.com.non_stop.nonstopplatformapi.domain.entities.Course;
 import ao.com.non_stop.nonstopplatformapi.dtos.actors.teachers.TeachersRequestDTO;
+import ao.com.non_stop.nonstopplatformapi.dtos.actors.teachers.TeachersResponseDTO;
+import ao.com.non_stop.nonstopplatformapi.exceptions.CourseNotFoundException;
+import ao.com.non_stop.nonstopplatformapi.repositories.CourseRepository;
+import ao.com.non_stop.nonstopplatformapi.repositories.TeachersRepository;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @AllArgsConstructor
 public class TeachersService {
 
-    public ResponseEntity<String> registerTeacher(TeachersRequestDTO newTeacher){
+    private TeachersRepository teachersRepository;
+    private CourseRepository courseRepository;
 
+    public ResponseEntity<String> updateDetails(String email,TeachersRequestDTO details){
+        try {
+            Teacher teacher = this.teachersRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("No Teacher Were Found !"));
+            teacher.setSpecialization(details.specialization());
+            teacher.setAbout_me(details.about());
+            teacher.setName(details.name());
 
+            return ResponseEntity.status(HttpStatus.OK).build();
+        } catch (UsernameNotFoundException e) {
+            throw new UsernameNotFoundException("There's no Teacher with ["+email+"]email !");
+        }
+    }
 
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+    @Transactional
+    public ResponseEntity<String> deleteAccount(String email){
+        try{
+            Teacher teacher = this.teachersRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("No Teacher Were Found !"));
+            this.teachersRepository.delete(teacher);
+
+            return ResponseEntity.status(HttpStatus.OK).build();
+
+        } catch (UsernameNotFoundException e) {
+            throw new UsernameNotFoundException("There's no Teacher with ["+email+"]email !");
+        }
+    }
+
+    public ResponseEntity<TeachersResponseDTO> getProfileDetails(String email){
+        Teacher teacher = this.teachersRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("No Teacher Were Found !"));
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new TeachersResponseDTO(null,
+                teacher.getName(),
+                teacher.getEmail(),
+                teacher.getAbout_me(),
+                teacher.getSpecialization(),
+                teacher.getCourses())
+        );
+    }
+
+    public ResponseEntity<String> deleteCourse(long course_id,String email){
+        try {
+            Teacher teacher = this.teachersRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("No Teacher Were Found !"));
+            Course course = this.courseRepository.findByIdAndTeacher(course_id, teacher);
+
+            this.courseRepository.delete(course);
+            return ResponseEntity.status(HttpStatus.OK).build();
+
+        } catch (UsernameNotFoundException e) {
+            throw new UsernameNotFoundException("There's no Teacher with ["+email+"]email !");
+        }catch (CourseNotFoundException e){
+            throw new CourseNotFoundException("We couldn't find this Course");
+        }
     }
 }
