@@ -1,9 +1,9 @@
 package ao.com.non_stop.nonstopplatformapi.controllers;
 
 import ao.com.non_stop.nonstopplatformapi.domain.actors.User;
-import ao.com.non_stop.nonstopplatformapi.dtos.LoginRequestDTO;
-import ao.com.non_stop.nonstopplatformapi.dtos.RegisterRequestDTO;
-import ao.com.non_stop.nonstopplatformapi.dtos.ResponseDTO;
+import ao.com.non_stop.nonstopplatformapi.dtos.auth.LoginRequestDTO;
+import ao.com.non_stop.nonstopplatformapi.dtos.auth.RegisterRequestDTO;
+import ao.com.non_stop.nonstopplatformapi.dtos.auth.ResponseDTO;
 import ao.com.non_stop.nonstopplatformapi.infra.security.TokenService;
 import ao.com.non_stop.nonstopplatformapi.services.AuthenticationService;
 import lombok.AllArgsConstructor;

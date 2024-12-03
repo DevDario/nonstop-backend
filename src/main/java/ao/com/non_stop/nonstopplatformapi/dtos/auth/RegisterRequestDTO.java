@@ -1,4 +1,4 @@
-package ao.com.non_stop.nonstopplatformapi.dtos;
+package ao.com.non_stop.nonstopplatformapi.dtos.auth;
 
 import ao.com.non_stop.nonstopplatformapi.enums.Roles;
 
