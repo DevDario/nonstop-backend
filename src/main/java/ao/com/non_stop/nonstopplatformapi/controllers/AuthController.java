@@ -23,7 +23,7 @@ public class AuthController {
     public ResponseEntity<ResponseDTO> registerUser(@RequestBody RegisterRequestDTO registerDTO) throws Exception{
         User authenticatedUser = this.authService.signup(registerDTO);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseDTO(authenticatedUser.getName(), null));
+        return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseDTO(authenticatedUser.getName(), "NOT_REQUIRED"));
     }
 
     @PostMapping("/login")
