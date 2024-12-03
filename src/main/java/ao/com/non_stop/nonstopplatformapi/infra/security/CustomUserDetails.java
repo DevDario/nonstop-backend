@@ -2,7 +2,6 @@ package ao.com.non_stop.nonstopplatformapi.infra.security;
 
 import ao.com.non_stop.nonstopplatformapi.domain.actors.User;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -27,7 +26,7 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public String getUsername() {
-        return user.getPassword();
+        return user.getEmail();
     }
 
     @Override
