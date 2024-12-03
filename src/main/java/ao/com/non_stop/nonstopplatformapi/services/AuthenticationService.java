@@ -12,10 +12,10 @@ import ao.com.non_stop.nonstopplatformapi.repositories.UsersRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -25,7 +25,6 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final UsersRepository userRepository;
     private final AuthenticationManager authenticationManager;
-    private final TokenService tokenService;
 
     public User signup(RegisterRequestDTO registerDTO) throws Exception{
 
@@ -78,7 +77,7 @@ public class AuthenticationService {
 
     public User login(LoginRequestDTO loginDTO) throws Exception{
 
-        User user = this.userRepository.findByEmail(loginDTO.email()).orElseThrow(()-> new RuntimeException("User not found with email " + loginDTO.email()));
+        User user = this.userRepository.findByEmail(loginDTO.email()).orElseThrow(()-> new UsernameNotFoundException("User not found with email " + loginDTO.email()));
 
         if(passwordEncoder.matches(loginDTO.password(), user.getPassword())){
 
