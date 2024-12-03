@@ -1,6 +1,8 @@
 package ao.com.non_stop.nonstopplatformapi.services;
 
+import ao.com.non_stop.nonstopplatformapi.domain.actors.Student;
 import ao.com.non_stop.nonstopplatformapi.domain.actors.Teacher;
+import ao.com.non_stop.nonstopplatformapi.domain.entities.Enrollment;
 import ao.com.non_stop.nonstopplatformapi.dtos.course.CourseOverviewResponseDTO;
 import ao.com.non_stop.nonstopplatformapi.dtos.course.CourseRequestDTO;
 import ao.com.non_stop.nonstopplatformapi.dtos.course.CourseResponseDTO;
@@ -9,7 +11,9 @@ import ao.com.non_stop.nonstopplatformapi.enums.CourseCategory;
 import ao.com.non_stop.nonstopplatformapi.enums.CourseLevel;
 import ao.com.non_stop.nonstopplatformapi.exceptions.CourseNotFoundException;
 import ao.com.non_stop.nonstopplatformapi.repositories.CourseRepository;
+import ao.com.non_stop.nonstopplatformapi.repositories.EnrollmentRepository;
 import ao.com.non_stop.nonstopplatformapi.repositories.TeachersRepository;
+import ao.com.non_stop.nonstopplatformapi.repositories.UsersRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -27,6 +31,8 @@ public class CourseService {
 
     private final CourseRepository courseRepository;
     private final TeachersRepository teacherRepository;
+    private final EnrollmentRepository enrollmentRepository;
+    private final UsersRepository usersRepository;
 
     // acessible for all ROLES
     public Course getCourseById(Long courseId) throws CourseNotFoundException{
@@ -170,6 +176,21 @@ public class CourseService {
                 .toList();
     }
 
+    // Student-Entity-Focused methods
+    public ResponseEntity<String> enrollInCourse(String email, Long course_id){
+        Student student = (Student) this.usersRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("No Student Were Found !"));
+        Course course = this.courseRepository.findById(course_id).orElseThrow(()-> new CourseNotFoundException("Course Not Found !"));
+
+        Enrollment enrollment = Enrollment.builder()
+                .course(course)
+                .student(student)
+                .is_completed(false)
+                .progress(0F)
+                .build();
+
+        this.enrollmentRepository.save(enrollment);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
 
     // dev env use only
     public ResponseEntity<String> createMultipleCourses(List<CourseRequestDTO> courses){
