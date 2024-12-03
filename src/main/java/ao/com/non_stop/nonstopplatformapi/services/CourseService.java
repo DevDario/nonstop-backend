@@ -59,7 +59,7 @@ public class CourseService {
             .toList();
     }
 
-    public Course getCourseByName(String name) throws Exception{
+    public Course getCourseByName(String name){
         return this.courseRepository.findByName(name).orElseThrow(()-> new CourseNotFoundException(String.format("There's no %s course",name)));
     }
 
@@ -147,7 +147,7 @@ public class CourseService {
 
 
     // Teacher-Entity-Focused methds
-    public ResponseEntity<String> deleteCourseFromTeacher(String teacher_email, long course_id) throws Exception{
+    public ResponseEntity<String> deleteCourseFromTeacher(String teacher_email, long course_id){
         Teacher currentTeacher = this.teacherRepository.findByEmail(teacher_email).orElseThrow(()-> new UsernameNotFoundException("There is no Teacher With This Email !"));
         Course courseToDelete = this.courseRepository.findByIdAndTeacher(course_id,currentTeacher);
         this.courseRepository.delete(courseToDelete);
