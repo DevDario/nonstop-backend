@@ -1,4 +1,4 @@
-package ao.com.non_stop.nonstopplatformapi.services.actors;
+package ao.com.non_stop.nonstopplatformapi.services;
 
 import ao.com.non_stop.nonstopplatformapi.dtos.actors.teachers.TeachersRequestDTO;
 import lombok.AllArgsConstructor;
