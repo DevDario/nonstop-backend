@@ -1,6 +1,7 @@
 package ao.com.non_stop.nonstopplatformapi.controllers;
 
 import ao.com.non_stop.nonstopplatformapi.domain.entities.Course;
+import ao.com.non_stop.nonstopplatformapi.dtos.course.CourseOverviewResponseDTO;
 import ao.com.non_stop.nonstopplatformapi.dtos.course.CourseResponseDTO;
 import ao.com.non_stop.nonstopplatformapi.services.CourseService;
 import ao.com.non_stop.nonstopplatformapi.services.StudentService;
@@ -30,7 +31,7 @@ public class StudentController {
     }
 
     @GetMapping("/enrollments")
-    public ResponseEntity<List<Course>> getAllEnrolledCourses(Principal principal){
+    public ResponseEntity<List<CourseOverviewResponseDTO>> getAllEnrolledCourses(Principal principal){
         String email = this.getStudentEmail(principal);
         return this.studentService.getAllEnrollments(email);
     }
