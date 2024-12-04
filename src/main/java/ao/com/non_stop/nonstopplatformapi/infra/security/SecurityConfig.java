@@ -31,6 +31,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST,"/api/v1/auth/**").permitAll()
                         .requestMatchers("/api/v1/admin/**").hasAuthority("ADMIN")
                         .requestMatchers("/api/v1/student/**").hasAuthority("STUDENT")
+                        .requestMatchers(HttpMethod.POST,"/api/v1/course/enroll/**").hasAuthority("STUDENT")
                         .requestMatchers("/api/v1/teacher/**").hasAuthority("TEACHER")
                         .requestMatchers(HttpMethod.GET,"/api/v1/course/name/").permitAll()
                         .requestMatchers(HttpMethod.GET,"/api/v1/course/filter/").permitAll()
