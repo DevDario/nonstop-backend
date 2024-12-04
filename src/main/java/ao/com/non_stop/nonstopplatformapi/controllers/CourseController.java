@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.Base64;
 import java.util.List;
 
@@ -83,6 +84,12 @@ public class CourseController {
     @PutMapping("/{courseId}")
     public ResponseEntity<String> updateCourseDetails(@RequestBody CourseRequestDTO body, @PathVariable Long courseId) throws CourseNotFoundException{
         return this.courseService.updateCourseDetails(body,courseId);
+    }
+
+    @PostMapping("/enroll/{course_id}")
+    public ResponseEntity<String> enrollInCourse(Principal principal, @PathVariable(name = "course_id") Long course_id){
+        String email = principal.getName();
+        return this.courseService.enrollInCourse(email,course_id);
     }
 
     //dev env use only
