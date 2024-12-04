@@ -30,7 +30,6 @@ public class Enrollment {
     @Column(name = "enrollment_date", nullable = false)
     private Date enrollment_date;
 
-    @NotBlank
     @Min(0)
     @Max(100)
     @Column(name = "progress_percentage", nullable = false)
