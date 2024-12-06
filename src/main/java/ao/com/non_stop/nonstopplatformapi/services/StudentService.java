@@ -9,6 +9,7 @@ import ao.com.non_stop.nonstopplatformapi.repositories.UsersRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,13 +23,15 @@ public class StudentService {
     private final StudentsRepository studentsRepository;
     private final UsersRepository usersRepository;
     private final EnrollmentRepository enrollmentRepository;
+    private final Authentication authentication;
 
 
     @Transactional
-    public ResponseEntity<String> deleteAccount(String email){
+    public ResponseEntity<String> deleteAccount(String email) throws UsernameNotFoundException{
         try{
             Student student = (Student) this.usersRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("No Student Were Found !"));
             this.studentsRepository.delete(student);
+            this.authentication.setAuthenticated(false);
 
             return ResponseEntity.status(HttpStatus.OK).build();
 
