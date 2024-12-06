@@ -7,10 +7,10 @@ import ao.com.non_stop.nonstopplatformapi.dtos.actors.teachers.TeachersResponseD
 import ao.com.non_stop.nonstopplatformapi.exceptions.CourseNotFoundException;
 import ao.com.non_stop.nonstopplatformapi.repositories.CourseRepository;
 import ao.com.non_stop.nonstopplatformapi.repositories.TeachersRepository;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,8 +19,9 @@ import org.springframework.transaction.annotation.Transactional;
 @AllArgsConstructor
 public class TeachersService {
 
-    private TeachersRepository teachersRepository;
-    private CourseRepository courseRepository;
+    private final TeachersRepository teachersRepository;
+    private final CourseRepository courseRepository;
+    private final Authentication authentication;
 
     public ResponseEntity<String> updateDetails(String email,TeachersRequestDTO details){
         try {
@@ -40,6 +41,7 @@ public class TeachersService {
         try{
             Teacher teacher = this.teachersRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("No Teacher Were Found !"));
             this.teachersRepository.delete(teacher);
+            this.authentication.setAuthenticated(false);
 
             return ResponseEntity.status(HttpStatus.OK).build();
 
