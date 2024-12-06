@@ -36,11 +36,6 @@ public class TokenService {
         return (email.equals(userDetails.getEmail()) && !isTokenExpired(token));
     }
 
-    public Key getSignInKey(){
-        byte[] keyBytes = Decoders.BASE64URL.decode(secretKey);
-        return Keys.hmacShaKeyFor(keyBytes);
-    }
-
     private boolean isTokenExpired(String token){
         return extractExpiration(token).before(new Date());
     }
