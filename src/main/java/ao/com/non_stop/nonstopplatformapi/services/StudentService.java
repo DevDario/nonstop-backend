@@ -2,6 +2,7 @@ package ao.com.non_stop.nonstopplatformapi.services;
 
 import ao.com.non_stop.nonstopplatformapi.domain.actors.Student;
 import ao.com.non_stop.nonstopplatformapi.domain.entities.Enrollment;
+import ao.com.non_stop.nonstopplatformapi.dtos.actors.students.StudentsProfileResponseDTO;
 import ao.com.non_stop.nonstopplatformapi.dtos.course.CourseOverviewResponseDTO;
 import ao.com.non_stop.nonstopplatformapi.repositories.EnrollmentRepository;
 import ao.com.non_stop.nonstopplatformapi.repositories.StudentsRepository;
@@ -56,5 +57,17 @@ public class StudentService {
                 enrollment.getCourse().getLanguage(),
                 enrollment.getCourse().getRating()
         )).toList());
+    }
+
+    public ResponseEntity<StudentsProfileResponseDTO> getProfileDetails(String email){
+        Student student = (Student) this.usersRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("No Student Were Found !"));
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new StudentsProfileResponseDTO(
+                        student.getName(),
+                        student.getEmail(),
+                        student.getCreated_at(),
+                        this.getAllEnrollments(email)
+                )
+        );
     }
 }
