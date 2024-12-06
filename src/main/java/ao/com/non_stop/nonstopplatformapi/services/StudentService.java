@@ -44,19 +44,17 @@ public class StudentService {
         Student student = (Student) this.usersRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("No Student Were Found !"));
         List<Enrollment> enrollments = this.enrollmentRepository.findByStudent(student);
 
-        return ResponseEntity.status(HttpStatus.OK).body(enrollments.stream().map(enrollment -> {
-            return new CourseOverviewResponseDTO(
-                    enrollment.getCourse().getId(),
-                    enrollment.getCourse().getName(),
-                    enrollment.getCourse().getDescription(),
-                    enrollment.getCourse().getReleaseDate(),
-                    enrollment.getCourse().getCategory(),
-                    enrollment.getCourse().getLevel(),
-                    enrollment.getCourse().getImageUrl(),
-                    enrollment.getCourse().getDuration(),
-                    enrollment.getCourse().getLanguage(),
-                    enrollment.getCourse().getRating()
-            );
-        }).toList());
+        return ResponseEntity.status(HttpStatus.OK).body(enrollments.stream().map(enrollment -> new CourseOverviewResponseDTO(
+                enrollment.getCourse().getId(),
+                enrollment.getCourse().getName(),
+                enrollment.getCourse().getDescription(),
+                enrollment.getCourse().getReleaseDate(),
+                enrollment.getCourse().getCategory(),
+                enrollment.getCourse().getLevel(),
+                enrollment.getCourse().getImageUrl(),
+                enrollment.getCourse().getDuration(),
+                enrollment.getCourse().getLanguage(),
+                enrollment.getCourse().getRating()
+        )).toList());
     }
 }
