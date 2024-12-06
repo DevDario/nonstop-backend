@@ -1,10 +1,8 @@
 package ao.com.non_stop.nonstopplatformapi.services;
 
 import ao.com.non_stop.nonstopplatformapi.domain.actors.Student;
-import ao.com.non_stop.nonstopplatformapi.domain.entities.Course;
 import ao.com.non_stop.nonstopplatformapi.domain.entities.Enrollment;
 import ao.com.non_stop.nonstopplatformapi.dtos.course.CourseOverviewResponseDTO;
-import ao.com.non_stop.nonstopplatformapi.dtos.course.CourseResponseDTO;
 import ao.com.non_stop.nonstopplatformapi.repositories.EnrollmentRepository;
 import ao.com.non_stop.nonstopplatformapi.repositories.StudentsRepository;
 import ao.com.non_stop.nonstopplatformapi.repositories.UsersRepository;
