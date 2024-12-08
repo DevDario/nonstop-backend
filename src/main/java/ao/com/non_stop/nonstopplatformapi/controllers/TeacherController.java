@@ -44,6 +44,14 @@ public class TeacherController {
         return this.classesService.addClassToCourse(email,course_id,body);
     }
 
+    @Transactional
+    @DeleteMapping("/courses/{course_id}/{class_id}")
+    public ResponseEntity<String> deleteContenFromCourse(Principal principal, @PathVariable long course_id, @PathVariable long class_id){
+        String email = this.getTeacherEmail(principal);
+        return this.classesService.removeClassFromCourse(email,course_id,class_id);
+    }
+
+
     @GetMapping("/profile/")
     public ResponseEntity<TeachersResponseDTO> getProfileDetails(Principal principal){
         String email = this.getTeacherEmail(principal);
