@@ -38,4 +38,12 @@ public class ClassesService {
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
+
+    public ResponseEntity<String> removeClassFromCourse(String teacher_email, long course_id, long class_id){
+        Teacher currentTeacher = this.teacherRepository.findByEmail(teacher_email).orElseThrow(() -> new UsernameNotFoundException("There is no Teacher With This Email !"));
+        Course course = this.courseRepository.findByIdAndTeacher(course_id, currentTeacher);
+        CourseClasses course_class = this.classesRepository.findByCourseAndId(course,class_id);
+        this.classesRepository.delete(course_class);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
 }
