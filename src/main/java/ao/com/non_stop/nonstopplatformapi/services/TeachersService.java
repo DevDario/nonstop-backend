@@ -21,7 +21,7 @@ public class TeachersService {
 
     private final TeachersRepository teachersRepository;
     private final CourseRepository courseRepository;
-    private final Authentication authentication;
+    //private final Authentication authentication;
 
     public ResponseEntity<String> updateDetails(String email,TeachersRequestDTO details){
         try {
@@ -41,7 +41,7 @@ public class TeachersService {
         try{
             Teacher teacher = this.teachersRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("No Teacher Were Found !"));
             this.teachersRepository.delete(teacher);
-            this.authentication.setAuthenticated(false);
+            //this.authentication.setAuthenticated(false);
 
             return ResponseEntity.status(HttpStatus.OK).build();
 

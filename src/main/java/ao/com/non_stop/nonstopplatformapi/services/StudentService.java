@@ -24,7 +24,7 @@ public class StudentService {
     private final StudentsRepository studentsRepository;
     private final UsersRepository usersRepository;
     private final EnrollmentRepository enrollmentRepository;
-    private final Authentication authentication;
+    //private final Authentication authentication;
 
 
     @Transactional
@@ -32,7 +32,7 @@ public class StudentService {
         try{
             Student student = (Student) this.usersRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("No Student Were Found !"));
             this.studentsRepository.delete(student);
-            this.authentication.setAuthenticated(false);
+            //this.authentication.setAuthenticated(false);
 
             return ResponseEntity.status(HttpStatus.OK).build();
 
