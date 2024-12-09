@@ -58,7 +58,7 @@ public class TeacherController {
         return this.teachersService.getProfileDetails(email);
     }
 
-    @PostMapping("/profile/delete")
+    @DeleteMapping("/profile/")
     public ResponseEntity<String> deleteAccount(Principal principal){
         String email = this.getTeacherEmail(principal);
         return this.teachersService.deleteAccount(email);
