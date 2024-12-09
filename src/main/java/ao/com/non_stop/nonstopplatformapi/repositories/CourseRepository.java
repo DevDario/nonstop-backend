@@ -35,4 +35,13 @@ public interface CourseRepository extends JpaRepository<Course,Long> {
     Course findByIdAndTeacher(long course_id, Teacher teacher);
 
     Page<Course> findByTeacher(Teacher teacher,Pageable pageable);
+
+    @Query("SELECT DISTINCT category FROM Course")
+    List<CourseCategory> findCategories();
+
+    @Query("SELECT DISTINCT level FROM Course")
+    List<CourseLevel> findLevels();
+
+    @Query("SELECT DISTINCT language FROM Course")
+    List<String> findLanguages();
 }
