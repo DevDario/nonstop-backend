@@ -61,19 +61,4 @@ public class TeachersService {
                 teacher.getCourses())
         );
     }
-
-    public ResponseEntity<String> deleteCourse(long course_id,String email){
-        try {
-            Teacher teacher = this.teachersRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("No Teacher Were Found !"));
-            Course course = this.courseRepository.findByIdAndTeacher(course_id, teacher);
-
-            this.courseRepository.delete(course);
-            return ResponseEntity.status(HttpStatus.OK).build();
-
-        } catch (UsernameNotFoundException e) {
-            throw new UsernameNotFoundException("There's no Teacher with ["+email+"]email !");
-        }catch (CourseNotFoundException e){
-            throw new CourseNotFoundException("We couldn't find this Course");
-        }
-    }
 }
