@@ -1,5 +1,6 @@
 package ao.com.non_stop.nonstopplatformapi.controllers;
 
+import ao.com.non_stop.nonstopplatformapi.dtos.actors.teachers.TeachersRequestDTO;
 import ao.com.non_stop.nonstopplatformapi.dtos.actors.teachers.TeachersResponseDTO;
 import ao.com.non_stop.nonstopplatformapi.dtos.classes.NewClassRequestDTO;
 import ao.com.non_stop.nonstopplatformapi.dtos.course.CourseOverviewResponseDTO;
@@ -62,6 +63,12 @@ public class TeacherController {
     public ResponseEntity<String> deleteAccount(Principal principal){
         String email = this.getTeacherEmail(principal);
         return this.teachersService.deleteAccount(email);
+    }
+
+    @PutMapping("/profile/")
+    public ResponseEntity<String> updateProfileDetails(Principal principal, @RequestBody TeachersRequestDTO body){
+        String email = this.getTeacherEmail(principal);
+        return this.teachersService.updateDetails(email, body);
     }
 
     @GetMapping("/courses/")
