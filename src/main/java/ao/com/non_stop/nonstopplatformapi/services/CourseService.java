@@ -96,6 +96,15 @@ public class CourseService {
                 .toList();
     }
 
+    public List<String> getAllTopics(String parameter) throws IllegalArgumentException{
+        return switch (parameter) {
+            case "byCategory" -> this.courseRepository.findCategories().stream().map(Enum::name).toList();
+            case "byLanguage" -> this.courseRepository.findLanguages().stream().toList();
+            case "byLevel" -> this.courseRepository.findLevels().stream().map(Enum::name).toList();
+            case null, default -> throw new IllegalArgumentException("No Valid Parameter was Provided !");
+        };
+    }
+
     // only for Users with ADMIN Role
     public ResponseEntity<String> updateCourseDetails(CourseRequestDTO courseDetails, Long courseId)throws CourseNotFoundException{
         Course course = this.courseRepository.findById(courseId).orElseThrow(()-> new CourseNotFoundException("We couldn't find a course with the ID of " + courseId));
