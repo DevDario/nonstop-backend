@@ -8,12 +8,12 @@ import ao.com.non_stop.nonstopplatformapi.enums.CourseLevel;
 import ao.com.non_stop.nonstopplatformapi.exceptions.CourseNotFoundException;
 import ao.com.non_stop.nonstopplatformapi.services.CourseService;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.util.Base64;
 import java.util.List;
 
 @Controller
@@ -90,6 +90,24 @@ public class CourseController {
     public ResponseEntity<String> enrollInCourse(Principal principal, @PathVariable(name = "course_id") Long course_id){
         String email = principal.getName();
         return this.courseService.enrollInCourse(email,course_id);
+    }
+
+    /**
+     * @return all registered categories,
+     * languages or levels from courses,
+     * so the user can filter courses
+     * by those parameters
+     *
+     * @param param
+     * the parameter to look for (category, level or language)
+     *
+     * @throws IllegalArgumentException if no param valid value is provided
+     **/
+
+    @GetMapping("/topics")
+    public ResponseEntity<List<String>> getTopics(@RequestParam(name = "param") String param){
+        var topicsList = this.courseService.getAllTopics(param);
+        return ResponseEntity.status(HttpStatus.OK).body(topicsList);
     }
 
     //dev env use only
