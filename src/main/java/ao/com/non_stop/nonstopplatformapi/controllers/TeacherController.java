@@ -59,7 +59,7 @@ public class TeacherController {
     }
 
     @GetMapping("/courses/")
-    public ResponseEntity<List<CourseOverviewResponseDTO>> getAllCourses(Principal principal,
+    public ResponseEntity<List<CourseOverviewResponseDTO>> getAllCreatedCourses(Principal principal,
                                                                          @RequestParam(defaultValue = "0") int page,
                                                                          @RequestParam(defaultValue = "5") int size) throws  Exception{
         String email = this.getTeacherEmail(principal);
