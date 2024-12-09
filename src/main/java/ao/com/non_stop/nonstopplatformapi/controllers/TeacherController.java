@@ -58,6 +58,12 @@ public class TeacherController {
         return this.teachersService.getProfileDetails(email);
     }
 
+    @PostMapping("/profile/delete")
+    public ResponseEntity<String> deleteAccount(Principal principal){
+        String email = this.getTeacherEmail(principal);
+        return this.teachersService.deleteAccount(email);
+    }
+
     @GetMapping("/courses/")
     public ResponseEntity<List<CourseOverviewResponseDTO>> getAllCreatedCourses(Principal principal,
                                                                          @RequestParam(defaultValue = "0") int page,
