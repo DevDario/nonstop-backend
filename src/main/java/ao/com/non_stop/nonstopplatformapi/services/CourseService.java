@@ -3,6 +3,7 @@ package ao.com.non_stop.nonstopplatformapi.services;
 import ao.com.non_stop.nonstopplatformapi.domain.actors.Student;
 import ao.com.non_stop.nonstopplatformapi.domain.actors.Teacher;
 import ao.com.non_stop.nonstopplatformapi.domain.entities.Enrollment;
+import ao.com.non_stop.nonstopplatformapi.dtos.classes.ClassesPreviewResponseDTO;
 import ao.com.non_stop.nonstopplatformapi.dtos.course.CourseOverviewResponseDTO;
 import ao.com.non_stop.nonstopplatformapi.dtos.course.CourseRequestDTO;
 import ao.com.non_stop.nonstopplatformapi.dtos.course.CourseResponseDTO;
@@ -24,6 +25,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -199,6 +201,18 @@ public class CourseService {
 
         this.enrollmentRepository.save(enrollment);
         return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    public ClassesPreviewResponseDTO getAllClassesFromCourse(String email, long course_id) throws Exception{
+        Course selectedCourse = this.courseRepository.findById(course_id).orElseThrow(()-> new CourseNotFoundException("Course Not Found !"));
+        Student loggedStudent = (Student) this.usersRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("No Student Were Found !"));
+        Optional<Enrollment> enrollment = this.enrollmentRepository.findByStudentAndCourse(loggedStudent,selectedCourse);
+        var classes = selectedCourse.getCourseClasses();
+
+        if(enrollment.isPresent()){
+            return new ClassesPreviewResponseDTO(true,classes);
+        }
+        return new ClassesPreviewResponseDTO(false,classes);
     }
 
     // dev env use only
