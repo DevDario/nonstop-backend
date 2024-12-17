@@ -209,9 +209,7 @@ public class CourseService {
         Optional<Enrollment> enrollment = this.enrollmentRepository.findByStudentAndCourse(loggedStudent,selectedCourse);
         var classes = selectedCourse.getCourseClasses();
 
-        if(enrollment.isPresent()){
-            return new ClassesPreviewResponseDTO(true,classes);
-        }
+        if(enrollment.isPresent()) return new ClassesPreviewResponseDTO(true, classes);
         return new ClassesPreviewResponseDTO(false,classes);
     }
 
