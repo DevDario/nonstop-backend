@@ -1,6 +1,7 @@
 package ao.com.non_stop.nonstopplatformapi.controllers;
 
 import ao.com.non_stop.nonstopplatformapi.domain.entities.CourseClasses;
+import ao.com.non_stop.nonstopplatformapi.dtos.classes.ClassResponseDTO;
 import ao.com.non_stop.nonstopplatformapi.dtos.classes.ClassesPreviewResponseDTO;
 import ao.com.non_stop.nonstopplatformapi.dtos.course.CourseRequestDTO;
 import ao.com.non_stop.nonstopplatformapi.domain.entities.Course;
@@ -98,6 +99,20 @@ public class CourseController {
     public ResponseEntity<ClassesPreviewResponseDTO> getClassesFromCourse(Principal principal, @PathVariable(name = "course_id") long course_id) throws Exception {
         String email = principal.getName();
         return ResponseEntity.status(HttpStatus.OK).body(this.courseService.getAllClassesFromCourse(email,course_id));
+    }
+
+    @GetMapping("/content/classes/{course_id}/{class_id}")
+    public ResponseEntity<ClassResponseDTO> getClassFromCourse(@PathVariable long course_id, @PathVariable long class_id) {
+        var courseClass = this.courseService.getClassFromCourse(course_id, class_id);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new ClassResponseDTO(
+                        courseClass.getId(),
+                        courseClass.getTitle(),
+                        courseClass.getContent_order(),
+                        courseClass.getContent_url(),
+                        courseClass.getIs_completed()
+                ));
     }
 
     /**

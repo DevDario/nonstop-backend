@@ -2,6 +2,7 @@ package ao.com.non_stop.nonstopplatformapi.services;
 
 import ao.com.non_stop.nonstopplatformapi.domain.actors.Student;
 import ao.com.non_stop.nonstopplatformapi.domain.actors.Teacher;
+import ao.com.non_stop.nonstopplatformapi.domain.entities.CourseClasses;
 import ao.com.non_stop.nonstopplatformapi.domain.entities.Enrollment;
 import ao.com.non_stop.nonstopplatformapi.dtos.classes.ClassesPreviewResponseDTO;
 import ao.com.non_stop.nonstopplatformapi.dtos.course.CourseOverviewResponseDTO;
@@ -11,10 +12,7 @@ import ao.com.non_stop.nonstopplatformapi.domain.entities.Course;
 import ao.com.non_stop.nonstopplatformapi.enums.CourseCategory;
 import ao.com.non_stop.nonstopplatformapi.enums.CourseLevel;
 import ao.com.non_stop.nonstopplatformapi.exceptions.CourseNotFoundException;
-import ao.com.non_stop.nonstopplatformapi.repositories.CourseRepository;
-import ao.com.non_stop.nonstopplatformapi.repositories.EnrollmentRepository;
-import ao.com.non_stop.nonstopplatformapi.repositories.TeachersRepository;
-import ao.com.non_stop.nonstopplatformapi.repositories.UsersRepository;
+import ao.com.non_stop.nonstopplatformapi.repositories.*;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -35,6 +33,7 @@ public class CourseService {
     private final TeachersRepository teacherRepository;
     private final EnrollmentRepository enrollmentRepository;
     private final UsersRepository usersRepository;
+    private final ClassesRepository classesRepository;
 
     // acessible for all ROLES
     public Course getCourseById(Long courseId) throws CourseNotFoundException{
@@ -211,6 +210,11 @@ public class CourseService {
 
         if(enrollment.isPresent()) return new ClassesPreviewResponseDTO(true, classes);
         return new ClassesPreviewResponseDTO(false,classes);
+    }
+
+    public CourseClasses getClassFromCourse(long course_id, long class_id){
+        Course course = this.courseRepository.findById(course_id).orElseThrow(()-> new CourseNotFoundException("Course Not Found !"));
+        return this.classesRepository.findByCourseAndId(course,class_id);
     }
 
     // dev env use only
