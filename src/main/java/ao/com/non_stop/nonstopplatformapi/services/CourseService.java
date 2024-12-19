@@ -5,6 +5,7 @@ import ao.com.non_stop.nonstopplatformapi.domain.actors.Teacher;
 import ao.com.non_stop.nonstopplatformapi.domain.entities.CourseClasses;
 import ao.com.non_stop.nonstopplatformapi.domain.entities.Enrollment;
 import ao.com.non_stop.nonstopplatformapi.dtos.classes.ClassesPreviewResponseDTO;
+import ao.com.non_stop.nonstopplatformapi.dtos.classes.ProgressRequestDTO;
 import ao.com.non_stop.nonstopplatformapi.dtos.course.CourseOverviewResponseDTO;
 import ao.com.non_stop.nonstopplatformapi.dtos.course.CourseRequestDTO;
 import ao.com.non_stop.nonstopplatformapi.dtos.course.CourseResponseDTO;
@@ -14,6 +15,7 @@ import ao.com.non_stop.nonstopplatformapi.enums.CourseLevel;
 import ao.com.non_stop.nonstopplatformapi.exceptions.CourseNotFoundException;
 import ao.com.non_stop.nonstopplatformapi.repositories.*;
 import lombok.AllArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -25,6 +27,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
+@Log4j2
 @Service
 @AllArgsConstructor
 public class CourseService {
@@ -206,15 +209,40 @@ public class CourseService {
         Course selectedCourse = this.courseRepository.findById(course_id).orElseThrow(()-> new CourseNotFoundException("Course Not Found !"));
         Student loggedStudent = (Student) this.usersRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("No Student Were Found !"));
         Optional<Enrollment> enrollment = this.enrollmentRepository.findByStudentAndCourse(loggedStudent,selectedCourse);
-        var classes = selectedCourse.getCourseClasses();
 
-        if(enrollment.isPresent()) return new ClassesPreviewResponseDTO(true, classes);
-        return new ClassesPreviewResponseDTO(false,classes);
+        if(enrollment.isPresent()){
+            var classes = enrollment.get().getCourse().getCourseClasses();
+            return new ClassesPreviewResponseDTO(true, classes);
+        }
+        return new ClassesPreviewResponseDTO(false,null);
     }
 
     public CourseClasses getClassFromCourse(long course_id, long class_id){
         Course course = this.courseRepository.findById(course_id).orElseThrow(()-> new CourseNotFoundException("Course Not Found !"));
         return this.classesRepository.findByCourseAndId(course,class_id);
+    }
+
+
+    public ResponseEntity<String> updateProgress(String email, ProgressRequestDTO details) throws Exception{
+
+        try {
+            Student loggedStudent = (Student) this.usersRepository.findByEmail(email).orElseThrow(()-> new UsernameNotFoundException("No student were Found !"));
+            Course selectedCourse = this.courseRepository.findById(details.course_id()).orElseThrow(() -> new CourseNotFoundException("Course Not Found !"));
+            Optional<Enrollment> enrollment = this.enrollmentRepository.findByStudentAndCourse(loggedStudent,selectedCourse);
+
+            if(enrollment.isPresent()){
+                CourseClasses currentClass = this.classesRepository.findByCourseAndId(selectedCourse, details.class_id());
+                currentClass.setIs_completed(details.is_completed());
+                this.classesRepository.save(currentClass);
+            }else{
+                throw new Exception("You're not Enrolled on this Course !");
+            }
+
+        }catch(Exception e){
+            throw new Exception("Neither Course nor Class Were Found ! \n " + e.getMessage());
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     // dev env use only
