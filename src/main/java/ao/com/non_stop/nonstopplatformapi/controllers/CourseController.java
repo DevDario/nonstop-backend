@@ -1,6 +1,5 @@
 package ao.com.non_stop.nonstopplatformapi.controllers;
 
-import ao.com.non_stop.nonstopplatformapi.domain.entities.CourseClasses;
 import ao.com.non_stop.nonstopplatformapi.dtos.classes.ClassResponseDTO;
 import ao.com.non_stop.nonstopplatformapi.dtos.classes.ClassesPreviewResponseDTO;
 import ao.com.non_stop.nonstopplatformapi.dtos.classes.ProgressRequestDTO;
