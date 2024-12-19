@@ -3,6 +3,7 @@ package ao.com.non_stop.nonstopplatformapi.controllers;
 import ao.com.non_stop.nonstopplatformapi.domain.entities.CourseClasses;
 import ao.com.non_stop.nonstopplatformapi.dtos.classes.ClassResponseDTO;
 import ao.com.non_stop.nonstopplatformapi.dtos.classes.ClassesPreviewResponseDTO;
+import ao.com.non_stop.nonstopplatformapi.dtos.classes.ProgressRequestDTO;
 import ao.com.non_stop.nonstopplatformapi.dtos.course.CourseRequestDTO;
 import ao.com.non_stop.nonstopplatformapi.domain.entities.Course;
 import ao.com.non_stop.nonstopplatformapi.dtos.course.CourseResponseDTO;
@@ -115,6 +116,11 @@ public class CourseController {
                 ));
     }
 
+    @PostMapping("/progress/")
+    public ResponseEntity<String> updateClassProgress(Principal principal, @RequestBody ProgressRequestDTO body) throws Exception{
+        String email = principal.getName();
+        return this.courseService.updateProgress(email,body);
+    }
     /**
      * @return all registered categories,
      * languages or levels from courses,
