@@ -15,7 +15,6 @@ import ao.com.non_stop.nonstopplatformapi.enums.CourseLevel;
 import ao.com.non_stop.nonstopplatformapi.exceptions.CourseNotFoundException;
 import ao.com.non_stop.nonstopplatformapi.repositories.*;
 import lombok.AllArgsConstructor;
-import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -27,7 +26,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
-@Log4j2
 @Service
 @AllArgsConstructor
 public class CourseService {
