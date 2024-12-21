@@ -231,13 +231,24 @@ public class CourseService {
             if(enrollment.isPresent()){
                 CourseClasses currentClass = this.classesRepository.findByCourseAndId(selectedCourse, details.class_id());
                 currentClass.setIs_completed(details.is_completed());
+
+                var numClasses = selectedCourse.getCourseClasses().size();
+                var order = currentClass.getContent_order();
+
+                //reached the last lesson
+                if(order==numClasses){
+                    enrollment.get().setIs_completed(true);
+                    enrollment.get().setProgress(100F);
+                    this.enrollmentRepository.save(enrollment.get());
+                }
                 this.classesRepository.save(currentClass);
+
             }else{
                 throw new Exception("You're not Enrolled on this Course !");
             }
 
         }catch(Exception e){
-            throw new Exception("Neither Course nor Class Were Found ! \n " + e.getMessage());
+            throw new Exception("Lesson Not Found ! \n " + e.getMessage());
         }
 
         return ResponseEntity.status(HttpStatus.OK).build();
