@@ -12,8 +12,7 @@ import ao.com.non_stop.nonstopplatformapi.dtos.course.CourseResponseDTO;
 import ao.com.non_stop.nonstopplatformapi.domain.entities.Course;
 import ao.com.non_stop.nonstopplatformapi.enums.CourseCategory;
 import ao.com.non_stop.nonstopplatformapi.enums.CourseLevel;
-import ao.com.non_stop.nonstopplatformapi.exceptions.CourseNotFoundException;
-import ao.com.non_stop.nonstopplatformapi.exceptions.InvalidRequestParameterException;
+import ao.com.non_stop.nonstopplatformapi.exceptions.*;
 import ao.com.non_stop.nonstopplatformapi.repositories.*;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -137,7 +136,7 @@ public class CourseService {
     // Also for Users with TEACHER Role
     public ResponseEntity<String> createCourse(CourseRequestDTO newCourse) throws Exception{
 
-        Teacher teacher = this.teacherRepository.findByEmail(newCourse.teacher_email()).orElseThrow(()-> new Exception("This Email Does not Belongs to Any Teacher !"));
+        Teacher teacher = this.teacherRepository.findByEmail(newCourse.teacher_email()).orElseThrow(()-> new UserNotFoundException("This Email Does not Belongs to Any Teacher !"));
 
         Course course = Course.builder()
                 .name(newCourse.name())
@@ -160,15 +159,15 @@ public class CourseService {
 
     // Teacher-Entity-Focused methds
     public ResponseEntity<String> deleteCourseFromTeacher(String teacher_email, long course_id){
-        Teacher currentTeacher = this.teacherRepository.findByEmail(teacher_email).orElseThrow(()-> new UsernameNotFoundException("There is no Teacher With This Email !"));
+        Teacher currentTeacher = this.teacherRepository.findByEmail(teacher_email).orElseThrow(()-> new UserNotFoundException("There is no Teacher With This Email !"));
         Course courseToDelete = this.courseRepository.findByIdAndTeacher(course_id,currentTeacher);
         this.courseRepository.delete(courseToDelete);
 
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    public List<CourseOverviewResponseDTO> getAllCoursesFromTeacher(int size, int page,String email) throws  Exception{
-        Teacher currentTeacher = this.teacherRepository.findByEmail(email).orElseThrow(()-> new UsernameNotFoundException("There is no Teacher With This Email !"));
+    public List<CourseOverviewResponseDTO> getAllCoursesFromTeacher(int size, int page,String email){
+        Teacher currentTeacher = this.teacherRepository.findByEmail(email).orElseThrow(()-> new UserNotFoundException("There is no Teacher With This Email !"));
 
         Pageable pageable = PageRequest.of(page,size);
         Page<Course> coursePage = this.courseRepository.findByTeacher(currentTeacher,pageable);
@@ -190,7 +189,7 @@ public class CourseService {
 
     // Student-Entity-Focused methods
     public ResponseEntity<String> enrollInCourse(String email, Long course_id){
-        Student student = (Student) this.usersRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("No Student Were Found !"));
+        Student student = (Student) this.usersRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException("No Student Were Found !"));
         Course course = this.courseRepository.findById(course_id).orElseThrow(()-> new CourseNotFoundException("There's no Course With the Given ID"));
 
         Enrollment enrollment = Enrollment.builder()
@@ -206,7 +205,7 @@ public class CourseService {
 
     public ClassesPreviewResponseDTO getAllClassesFromCourse(String email, long course_id) throws Exception{
         Course selectedCourse = this.courseRepository.findById(course_id).orElseThrow(()-> new CourseNotFoundException("There's no Course With the Given ID"));
-        Student loggedStudent = (Student) this.usersRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("No Student Were Found !"));
+        Student loggedStudent = (Student) this.usersRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException("No Student Were Found !"));
         Optional<Enrollment> enrollment = this.enrollmentRepository.findByStudentAndCourse(loggedStudent,selectedCourse);
 
         if(enrollment.isPresent()){
@@ -222,10 +221,10 @@ public class CourseService {
     }
 
 
-    public ResponseEntity<String> updateProgress(String email, ProgressRequestDTO details) throws Exception{
+    public ResponseEntity<String> updateProgress(String email, ProgressRequestDTO details){
 
         try {
-            Student loggedStudent = (Student) this.usersRepository.findByEmail(email).orElseThrow(()-> new UsernameNotFoundException("No student were Found !"));
+            Student loggedStudent = (Student) this.usersRepository.findByEmail(email).orElseThrow(()-> new UserNotFoundException("No student were Found !"));
             Course selectedCourse = this.courseRepository.findById(details.course_id()).orElseThrow(() -> new CourseNotFoundException("There's no Course With the Given ID"));
             Optional<Enrollment> enrollment = this.enrollmentRepository.findByStudentAndCourse(loggedStudent,selectedCourse);
 
@@ -245,11 +244,11 @@ public class CourseService {
                 this.classesRepository.save(currentClass);
 
             }else{
-                throw new Exception("You're not Enrolled on this Course !");
+                throw new EnrollmentNotFoundException("You're not Enrolled on this Course !");
             }
 
         }catch(Exception e){
-            throw new Exception("Lesson Not Found ! \n " + e.getMessage());
+            throw new CourseClassNotFoundException("We couldn't find this class !");
         }
 
         return ResponseEntity.status(HttpStatus.OK).build();

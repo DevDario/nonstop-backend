@@ -4,13 +4,13 @@ import ao.com.non_stop.nonstopplatformapi.domain.actors.Student;
 import ao.com.non_stop.nonstopplatformapi.domain.entities.Enrollment;
 import ao.com.non_stop.nonstopplatformapi.dtos.actors.students.StudentsProfileResponseDTO;
 import ao.com.non_stop.nonstopplatformapi.dtos.course.CourseOverviewResponseDTO;
+import ao.com.non_stop.nonstopplatformapi.exceptions.UserNotFoundException;
 import ao.com.non_stop.nonstopplatformapi.repositories.EnrollmentRepository;
 import ao.com.non_stop.nonstopplatformapi.repositories.StudentsRepository;
 import ao.com.non_stop.nonstopplatformapi.repositories.UsersRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,25 +23,23 @@ public class StudentService {
     private final StudentsRepository studentsRepository;
     private final UsersRepository usersRepository;
     private final EnrollmentRepository enrollmentRepository;
-    //private final Authentication authentication;
 
 
     @Transactional
-    public ResponseEntity<String> deleteAccount(String email) throws UsernameNotFoundException{
+    public ResponseEntity<String> deleteAccount(String email) throws UserNotFoundException{
         try{
-            Student student = (Student) this.usersRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("No Student Were Found !"));
+            Student student = (Student) this.usersRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException("No Student Were Found !"));
             this.studentsRepository.delete(student);
-            //this.authentication.setAuthenticated(false);
 
             return ResponseEntity.status(HttpStatus.OK).build();
 
-        } catch (UsernameNotFoundException e) {
-            throw new UsernameNotFoundException("There's no Student with ["+email+"]email !");
+        } catch (UserNotFoundException e) {
+            throw new UserNotFoundException("There's no Student with ["+email+"]email !");
         }
     }
 
     public ResponseEntity<List<CourseOverviewResponseDTO>> getAllEnrollments(String email){
-        Student student = (Student) this.usersRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("No Student Were Found !"));
+        Student student = (Student) this.usersRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException("No Student Were Found !"));
         List<Enrollment> enrollments = this.enrollmentRepository.findByStudent(student);
 
         return ResponseEntity.status(HttpStatus.OK).body(enrollments.stream().map(enrollment -> new CourseOverviewResponseDTO(
@@ -59,7 +57,7 @@ public class StudentService {
     }
 
     public ResponseEntity<StudentsProfileResponseDTO> getProfileDetails(String email){
-        Student student = (Student) this.usersRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("No Student Were Found !"));
+        Student student = (Student) this.usersRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException("No Student Were Found !"));
         return ResponseEntity.status(HttpStatus.OK).body(
                 new StudentsProfileResponseDTO(
                         student.getName(),
