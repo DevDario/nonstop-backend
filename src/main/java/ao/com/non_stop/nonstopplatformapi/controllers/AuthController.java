@@ -8,6 +8,7 @@ import ao.com.non_stop.nonstopplatformapi.infra.security.TokenService;
 import ao.com.non_stop.nonstopplatformapi.services.AuthenticationService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,7 +24,7 @@ public class AuthController {
     public ResponseEntity<ResponseDTO> registerUser(@RequestBody RegisterRequestDTO registerDTO){
         User authenticatedUser = this.authService.signup(registerDTO);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseDTO(authenticatedUser.getName(), "NOT_REQUIRED"));
+        return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseDTO(authenticatedUser.getName(), "NOT_REQUIRED",201));
     }
 
     @PostMapping("/login")
@@ -31,6 +32,6 @@ public class AuthController {
         User newUser = authService.login(loginDTO);
         String token = this.tokenService.generateToken(newUser);
 
-        return ResponseEntity.ok().body(new ResponseDTO(newUser.getEmail(), token));
+        return ResponseEntity.status(HttpStatus.OK).body(new ResponseDTO(newUser.getEmail(), token, 200));
     }
 }
