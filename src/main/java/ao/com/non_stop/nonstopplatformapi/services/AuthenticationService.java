@@ -7,11 +7,13 @@ import ao.com.non_stop.nonstopplatformapi.domain.actors.User;
 import ao.com.non_stop.nonstopplatformapi.dtos.auth.LoginRequestDTO;
 import ao.com.non_stop.nonstopplatformapi.dtos.auth.RegisterRequestDTO;
 import ao.com.non_stop.nonstopplatformapi.enums.Roles;
+import ao.com.non_stop.nonstopplatformapi.exceptions.EmailAlreadyInUseException;
+import ao.com.non_stop.nonstopplatformapi.exceptions.IncorrectPasswordException;
+import ao.com.non_stop.nonstopplatformapi.exceptions.UserNotFoundException;
 import ao.com.non_stop.nonstopplatformapi.repositories.UsersRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -25,14 +27,12 @@ public class AuthenticationService {
     private final UsersRepository userRepository;
     private final AuthenticationManager authenticationManager;
 
-    public User signup(RegisterRequestDTO registerDTO) throws Exception{
+    public User signup(RegisterRequestDTO registerDTO){
 
-        // Check if the email is already taken
         if (userRepository.findByEmail(registerDTO.email()).isPresent()) {
-            throw new Exception("Error: Email is already in use!");
+            throw new EmailAlreadyInUseException("Email is already in use. Try to Login");
         }
 
-        // Determine the role and create the corresponding user
         User newUser;
         switch (registerDTO.role()) {
             case Roles.ADMIN:
@@ -66,17 +66,15 @@ public class AuthenticationService {
                 break;
 
             default:
-                throw new Exception("Error: Invalid role specified!");
+                throw new RuntimeException("Invalid Role specified!");
         }
-
-        // Save the user to the database
         userRepository.save(newUser);
         return newUser;
     }
 
     public User login(LoginRequestDTO loginDTO) throws Exception{
 
-        User user = this.userRepository.findByEmail(loginDTO.email()).orElseThrow(()-> new UsernameNotFoundException("User not found with email " + loginDTO.email()));
+        User user = this.userRepository.findByEmail(loginDTO.email()).orElseThrow(()-> new UserNotFoundException("We couldn't find a user with this email"));
 
         if(passwordEncoder.matches(loginDTO.password(), user.getPassword())){
 
@@ -87,11 +85,11 @@ public class AuthenticationService {
                 System.out.println("\n Authenticated ! \n");
 
             }catch(Exception e){
-                throw new RuntimeException("Setting authenticated gone bad ! \n " + e);
+                throw new RuntimeException("Error While Authenticating User ! " + e);
             }
 
             return user;
         }
-        throw new Exception("Login gone wrong !");
+        throw new IncorrectPasswordException("Wrong Password. Try Again !");
     }
 }
