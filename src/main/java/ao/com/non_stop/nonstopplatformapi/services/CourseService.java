@@ -110,7 +110,7 @@ public class CourseService {
 
     // only for Users with ADMIN Role
     public ResponseEntity<String> updateCourseDetails(CourseRequestDTO courseDetails, Long courseId)throws CourseNotFoundException{
-        Course course = this.courseRepository.findById(courseId).orElseThrow(()-> new CourseNotFoundException("We couldn't find a course with the ID of " + courseId));
+        Course course = this.courseRepository.findById(courseId).orElseThrow(()-> new CourseNotFoundException("There's no Course With the Given ID"));
 
         course.setName(courseDetails.name());
         course.setDescription(courseDetails.description());
@@ -128,7 +128,7 @@ public class CourseService {
     }
 
     public ResponseEntity<String> deleteCourse(Long courseId) throws CourseNotFoundException{
-        Course course = courseRepository.findById(courseId).orElseThrow(()-> new CourseNotFoundException("We couldn't find a course with the ID of " + courseId));
+        Course course = courseRepository.findById(courseId).orElseThrow(()-> new CourseNotFoundException("There's no Course With the Given ID"));
         courseRepository.delete(course);
 
         return ResponseEntity.status(HttpStatus.OK).build();
@@ -191,7 +191,7 @@ public class CourseService {
     // Student-Entity-Focused methods
     public ResponseEntity<String> enrollInCourse(String email, Long course_id){
         Student student = (Student) this.usersRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("No Student Were Found !"));
-        Course course = this.courseRepository.findById(course_id).orElseThrow(()-> new CourseNotFoundException("Course Not Found !"));
+        Course course = this.courseRepository.findById(course_id).orElseThrow(()-> new CourseNotFoundException("There's no Course With the Given ID"));
 
         Enrollment enrollment = Enrollment.builder()
                 .course(course)
@@ -205,7 +205,7 @@ public class CourseService {
     }
 
     public ClassesPreviewResponseDTO getAllClassesFromCourse(String email, long course_id) throws Exception{
-        Course selectedCourse = this.courseRepository.findById(course_id).orElseThrow(()-> new CourseNotFoundException("Course Not Found !"));
+        Course selectedCourse = this.courseRepository.findById(course_id).orElseThrow(()-> new CourseNotFoundException("There's no Course With the Given ID"));
         Student loggedStudent = (Student) this.usersRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("No Student Were Found !"));
         Optional<Enrollment> enrollment = this.enrollmentRepository.findByStudentAndCourse(loggedStudent,selectedCourse);
 
@@ -217,7 +217,7 @@ public class CourseService {
     }
 
     public CourseClasses getClassFromCourse(long course_id, long class_id){
-        Course course = this.courseRepository.findById(course_id).orElseThrow(()-> new CourseNotFoundException("Course Not Found !"));
+        Course course = this.courseRepository.findById(course_id).orElseThrow(()-> new CourseNotFoundException("There's no Course With the Given ID"));
         return this.classesRepository.findByCourseAndId(course,class_id);
     }
 
@@ -226,7 +226,7 @@ public class CourseService {
 
         try {
             Student loggedStudent = (Student) this.usersRepository.findByEmail(email).orElseThrow(()-> new UsernameNotFoundException("No student were Found !"));
-            Course selectedCourse = this.courseRepository.findById(details.course_id()).orElseThrow(() -> new CourseNotFoundException("Course Not Found !"));
+            Course selectedCourse = this.courseRepository.findById(details.course_id()).orElseThrow(() -> new CourseNotFoundException("There's no Course With the Given ID"));
             Optional<Enrollment> enrollment = this.enrollmentRepository.findByStudentAndCourse(loggedStudent,selectedCourse);
 
             if(enrollment.isPresent()){
