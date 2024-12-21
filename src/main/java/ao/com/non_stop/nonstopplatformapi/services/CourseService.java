@@ -38,7 +38,7 @@ public class CourseService {
 
     // acessible for all ROLES
     public Course getCourseById(Long courseId) throws CourseNotFoundException{
-        return courseRepository.findById(courseId).orElseThrow(() -> new CourseNotFoundException("We couldn't find a course with the ID of " + courseId));
+        return courseRepository.findById(courseId).orElseThrow(() -> new CourseNotFoundException("There's no Course With the Given ID"));
     }
 
     public List<CourseResponseDTO> getAllCourses(int page,int size){
