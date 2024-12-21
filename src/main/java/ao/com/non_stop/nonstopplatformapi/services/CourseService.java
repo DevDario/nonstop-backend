@@ -13,6 +13,7 @@ import ao.com.non_stop.nonstopplatformapi.domain.entities.Course;
 import ao.com.non_stop.nonstopplatformapi.enums.CourseCategory;
 import ao.com.non_stop.nonstopplatformapi.enums.CourseLevel;
 import ao.com.non_stop.nonstopplatformapi.exceptions.CourseNotFoundException;
+import ao.com.non_stop.nonstopplatformapi.exceptions.InvalidRequestParameterException;
 import ao.com.non_stop.nonstopplatformapi.repositories.*;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -98,12 +99,12 @@ public class CourseService {
                 .toList();
     }
 
-    public List<String> getAllTopics(String parameter) throws IllegalArgumentException{
+    public List<String> getAllTopics(String parameter) throws InvalidRequestParameterException{
         return switch (parameter) {
             case "byCategory" -> this.courseRepository.findCategories().stream().map(Enum::name).toList();
             case "byLanguage" -> this.courseRepository.findLanguages().stream().toList();
             case "byLevel" -> this.courseRepository.findLevels().stream().map(Enum::name).toList();
-            case null, default -> throw new IllegalArgumentException("No Valid Parameter was Provided !");
+            case null, default -> throw new InvalidRequestParameterException("No valid parameter was provided !");
         };
     }
 
