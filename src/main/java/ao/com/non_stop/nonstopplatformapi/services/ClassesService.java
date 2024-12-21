@@ -4,6 +4,7 @@ import ao.com.non_stop.nonstopplatformapi.domain.actors.Teacher;
 import ao.com.non_stop.nonstopplatformapi.domain.entities.Course;
 import ao.com.non_stop.nonstopplatformapi.domain.entities.CourseClasses;
 import ao.com.non_stop.nonstopplatformapi.dtos.classes.NewClassRequestDTO;
+import ao.com.non_stop.nonstopplatformapi.exceptions.UserNotFoundException;
 import ao.com.non_stop.nonstopplatformapi.repositories.ClassesRepository;
 import ao.com.non_stop.nonstopplatformapi.repositories.CourseRepository;
 import ao.com.non_stop.nonstopplatformapi.repositories.TeachersRepository;
@@ -22,7 +23,7 @@ public class ClassesService {
     private final ClassesRepository classesRepository;
 
     public ResponseEntity<String> addClassToCourse(String teacher_email, long course_id, NewClassRequestDTO newContent) {
-        Teacher currentTeacher = this.teacherRepository.findByEmail(teacher_email).orElseThrow(() -> new UsernameNotFoundException("There is no Teacher With This Email !"));
+        Teacher currentTeacher = this.teacherRepository.findByEmail(teacher_email).orElseThrow(() -> new UserNotFoundException("There is no Teacher With This Email !"));
         Course course = this.courseRepository.findByIdAndTeacher(course_id, currentTeacher);
 
         CourseClasses newCourseContent = CourseClasses.builder()
@@ -40,7 +41,7 @@ public class ClassesService {
     }
 
     public ResponseEntity<String> removeClassFromCourse(String teacher_email, long course_id, long class_id){
-        Teacher currentTeacher = this.teacherRepository.findByEmail(teacher_email).orElseThrow(() -> new UsernameNotFoundException("There is no Teacher With This Email !"));
+        Teacher currentTeacher = this.teacherRepository.findByEmail(teacher_email).orElseThrow(() -> new UserNotFoundException("There is no Teacher With This Email !"));
         Course course = this.courseRepository.findByIdAndTeacher(course_id, currentTeacher);
         CourseClasses course_class = this.classesRepository.findByCourseAndId(course,class_id);
         this.classesRepository.delete(course_class);
