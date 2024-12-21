@@ -87,4 +87,17 @@ public class CustomControllerAdvice {
         );
     }
 
+    @ExceptionHandler(InvalidRequestParameterException.class)
+    public ResponseEntity<ExceptionResponse> handleInvalidRequestParameterException(InvalidRequestParameterException ex){
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+
+        return new ResponseEntity<>(
+                new ExceptionResponse(
+                        status,
+                        ex.getMessage()
+                ),
+                status
+        );
+    }
+
 }
