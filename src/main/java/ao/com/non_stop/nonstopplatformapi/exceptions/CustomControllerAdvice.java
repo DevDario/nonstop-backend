@@ -5,6 +5,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import java.util.Date;
+
 @ControllerAdvice
 public class CustomControllerAdvice {
 
@@ -90,6 +92,19 @@ public class CustomControllerAdvice {
     @ExceptionHandler(InvalidRequestParameterException.class)
     public ResponseEntity<ExceptionResponse> handleInvalidRequestParameterException(InvalidRequestParameterException ex){
         HttpStatus status = HttpStatus.BAD_REQUEST;
+
+        return new ResponseEntity<>(
+                new ExceptionResponse(
+                        status,
+                        ex.getMessage()
+                ),
+                status
+        );
+    }
+
+    @ExceptionHandler(CourseClassNotFoundException.class)
+    public ResponseEntity<ExceptionResponse> handleCourseClassNotFoundException(CourseClassNotFoundException ex){
+        HttpStatus status = HttpStatus.NOT_FOUND;
 
         return new ResponseEntity<>(
                 new ExceptionResponse(
