@@ -115,4 +115,17 @@ public class CustomControllerAdvice {
         );
     }
 
+    @ExceptionHandler(EnrollmentNotFoundException.class)
+    public ResponseEntity<ExceptionResponse> handlesEnrollmentNotFoundException(EnrollmentNotFoundException ex){
+        HttpStatus status = HttpStatus.NOT_FOUND;
+
+        return new ResponseEntity<>(
+                new ExceptionResponse(
+                        status,
+                        ex.getMessage()
+                ),
+                status
+        );
+    }
+
 }
