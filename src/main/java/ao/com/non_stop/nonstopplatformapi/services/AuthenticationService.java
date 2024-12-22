@@ -74,16 +74,18 @@ public class AuthenticationService {
 
     public User login(LoginRequestDTO loginDTO) throws Exception{
 
-        User user = this.userRepository.findByEmail(loginDTO.email()).orElseThrow(()-> new UserNotFoundException("We couldn't find a user with this email"));
+        User user = this.userRepository
+                .findByEmail(
+                        loginDTO.email()
+                ).orElseThrow(()-> new UserNotFoundException("We couldn't find a user with this email"));
 
         if(passwordEncoder.matches(loginDTO.password(), user.getPassword())){
-
             try{
-                authenticationManager.authenticate(
-                        new UsernamePasswordAuthenticationToken(loginDTO.email(), loginDTO.password())
-                );
-                System.out.println("\n Authenticated ! \n");
-
+                authenticationManager
+                        .authenticate
+                                (new UsernamePasswordAuthenticationToken(
+                                        loginDTO.email(),
+                                        loginDTO.password()));
             }catch(Exception e){
                 throw new RuntimeException("Error While Authenticating User ! " + e);
             }
