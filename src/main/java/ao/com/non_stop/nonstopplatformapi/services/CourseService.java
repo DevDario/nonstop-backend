@@ -20,7 +20,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -134,7 +133,7 @@ public class CourseService {
     }
 
     // Also for Users with TEACHER Role
-    public ResponseEntity<String> createCourse(CourseRequestDTO newCourse) throws Exception{
+    public ResponseEntity<String> createCourse(CourseRequestDTO newCourse){
 
         Teacher teacher = this.teacherRepository.findByEmail(newCourse.teacher_email()).orElseThrow(()-> new UserNotFoundException("This Email Does not Belongs to Any Teacher !"));
 
@@ -203,7 +202,7 @@ public class CourseService {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    public ClassesPreviewResponseDTO getAllClassesFromCourse(String email, long course_id) throws Exception{
+    public ClassesPreviewResponseDTO getAllClassesFromCourse(String email, long course_id){
         Course selectedCourse = this.courseRepository.findById(course_id).orElseThrow(()-> new CourseNotFoundException("There's no Course With the Given ID"));
         Student loggedStudent = (Student) this.usersRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException("No Student Were Found !"));
         Optional<Enrollment> enrollment = this.enrollmentRepository.findByStudentAndCourse(loggedStudent,selectedCourse);

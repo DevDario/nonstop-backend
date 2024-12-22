@@ -48,7 +48,7 @@ public class CourseController {
     }
 
     @GetMapping("/name/{name}")
-    public ResponseEntity<Course> getCourseByName(@PathVariable String name) throws Exception{
+    public ResponseEntity<Course> getCourseByName(@PathVariable String name) {
 
         var course = this.courseService.getCourseByName(name);
 
@@ -96,7 +96,7 @@ public class CourseController {
     }
 
     @GetMapping("/content/classes/{course_id}")
-    public ResponseEntity<ClassesPreviewResponseDTO> getClassesFromCourse(Principal principal, @PathVariable(name = "course_id") long course_id) throws Exception {
+    public ResponseEntity<ClassesPreviewResponseDTO> getClassesFromCourse(Principal principal, @PathVariable(name = "course_id") long course_id) {
         String email = principal.getName();
         return ResponseEntity.status(HttpStatus.OK).body(this.courseService.getAllClassesFromCourse(email,course_id));
     }
@@ -116,7 +116,7 @@ public class CourseController {
     }
 
     @PostMapping("/progress/")
-    public ResponseEntity<String> updateClassProgress(Principal principal, @RequestBody ProgressRequestDTO body) throws Exception{
+    public ResponseEntity<String> updateClassProgress(Principal principal, @RequestBody ProgressRequestDTO body){
         String email = principal.getName();
         return this.courseService.updateProgress(email,body);
     }
