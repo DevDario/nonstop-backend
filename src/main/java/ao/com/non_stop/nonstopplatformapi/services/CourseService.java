@@ -231,23 +231,26 @@ public class CourseService {
                 CourseClasses currentClass = this.classesRepository.findByCourseAndId(selectedCourse, details.class_id());
                 currentClass.setIs_completed(details.is_completed());
 
-                var numClasses = selectedCourse.getCourseClasses().size();
-                var order = currentClass.getContent_order();
+                long numClasses = selectedCourse.getCourseClasses().size();
+                long order = currentClass.getContent_order();
+                float percentage = (float) (100) /numClasses;
 
                 //reached the last lesson
+                enrollment.get().setProgress(enrollment.get().getProgress() + percentage);
                 if(order==numClasses){
                     enrollment.get().setIs_completed(true);
-                    enrollment.get().setProgress(100F);
-                    this.enrollmentRepository.save(enrollment.get());
                 }
                 this.classesRepository.save(currentClass);
+                this.enrollmentRepository.save(enrollment.get());
 
             }else{
                 throw new EnrollmentNotFoundException("You're not Enrolled on this Course !");
             }
 
-        }catch(Exception e){
-            throw new CourseClassNotFoundException("We couldn't find this class !");
+        }catch(CourseClassNotFoundException e){
+            throw new CourseClassNotFoundException("We couldn't find this class ! ");
+        } catch(RuntimeException e){
+            throw new RuntimeException("Error while updating progress: \n" + e.getMessage());
         }
 
         return ResponseEntity.status(HttpStatus.OK).build();
