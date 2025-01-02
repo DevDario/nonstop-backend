@@ -22,28 +22,28 @@ public class AdminService {
     private final UsersRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public ResponseEntity<String> updateDetails(String adminID, AdminsRequestDTO details){
+    public ResponseEntity<String> updateDetails(String email, AdminsRequestDTO details){
         try {
-            Admin adm = this.adminsRepository.findById(adminID).orElseThrow(() -> new UserNotFoundException("No Admin Were Found !"));
+            Admin adm = this.adminsRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException("No Admin Were Found !"));
 
             if (userRepository.findByEmail(details.email()).isPresent()) {
-                throw new EmailAlreadyInUseException("Email is already in use. Try to Other");
+                throw new EmailAlreadyInUseException("Email is already in use. Try to Another");
             }else{
                 adm.setName(details.name());
-                adm.setEmail(details.email());
-                adm.setName(passwordEncoder.encode(details.password()));
+                adm.setEmail(details.email() != null ? details.email() : adm.getEmail());
+                adm.setPassword(passwordEncoder.encode(details.password()));
 
                 this.adminsRepository.save(adm);
             }
 
             return ResponseEntity.status(HttpStatus.OK).build();
         } catch (UsernameNotFoundException e) {
-            throw new UserNotFoundException("There's no Teacher with ["+adminID+"] ID !");
+            throw new UserNotFoundException("There's no Admin with ["+email+"] Email !");
         }
     }
 
-    public ResponseEntity<AdminsResponseDTO> getProfileDetails(String adminID){
-        Admin adm = this.adminsRepository.findById(adminID).orElseThrow(()-> new UserNotFoundException("No Admin Were Found !"));
+    public ResponseEntity<AdminsResponseDTO> getProfileDetails(String email){
+        Admin adm = this.adminsRepository.findByEmail(email).orElseThrow(()-> new UserNotFoundException("No Admin Were Found !"));
         return ResponseEntity.status(HttpStatus.OK).body(
                 new AdminsResponseDTO(null,
                         adm.getName(),
