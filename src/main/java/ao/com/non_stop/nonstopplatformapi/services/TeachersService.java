@@ -25,6 +25,8 @@ public class TeachersService {
             teacher.setAbout_me(details.about());
             teacher.setName(details.name());
 
+            teachersRepository.save(teacher);
+
             return ResponseEntity.status(HttpStatus.OK).build();
         } catch (UsernameNotFoundException e) {
             throw new UserNotFoundException("There's no Teacher with ["+email+"] email !");
