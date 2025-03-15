@@ -1,0 +1,39 @@
+services:
+    db:
+        image: mysql:8.0
+        container_name: non_stop_db
+        environment:
+          MYSQL_ROOT_PASSWORD:
+          MYSQL_USER: admin
+          MYSQL_DATABASE: non_stop
+        ports:
+        - "3306:3306"
+        networks:
+        - backend
+        volumes:
+        - mysql_data:/var/lib/mysql
+        restart: always
+    app:
+       build:
+          context: .
+          dockerfile: Dockerfile
+       container_name: nonstop_api
+       environment:
+         SPRING_DATASOURCE_URL: jdbc:mysql://localhost:3306/non_stop
+         SPRING_DATASOURCE_USERNAME: root
+         SPRING_DATASOURCE_PASSWORD:
+       ports:
+       - "8080:8080"
+       depends_on:
+       - db
+       networks:
+       - backend
+       restart: always
+
+volumes:
+  mysql_data:
+
+networks:
+  backend:
+    driver: bridge
+
